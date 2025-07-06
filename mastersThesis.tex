@@ -92,145 +92,133 @@ W ostatnim rozdziale zawarto podsumowanie całej pracy, możliwe usprawnienia za
 
 
 \clearpage
-\section{Przedstawienie oprogramowania CPDev}
-\subsection{Omówienie dostępnych rozwiązań}
-Na rynku można znaleźć niezliczoną ilość pilotów uniwersalnych. Rożnią się one
-ceną, obsługiwanymi funkcjonalnościami czy sposobami zasilania. Większość z nich zazwyczaj
-wykorzystuje programowanie przycisków oparte na nasłuchiwaniu sygnałów podczerwonych z pilota, co dla niektórych użytkowników może stanowić
-wyzwanie, ze względu na uciążliwą obsługę procesu i znikomą informację z pilota o powodzeniu odebrania sygnału. Cena rzędu jedynie kilku czy kilkunastu złotych
-,już na polskim rynku, kusi jednak potencjalnych nabywców, nawet pomimo wątpliwej jakości wykonania. Przykładem
-takiego pilota uniwersalnego może być urządzenie Interlook L336\cite{cheapController}.
+\section{Środowisko CPDev}
+\subsection{Charakterystyka narzędzia}
+CPDev (Control Program Developer) to otwarte, uniwersalne środowisko inżynierskie przeznaczone do tworzenia i wdrażania oprogramowania sterującego dla systemów automatyki. Powstało jako efekt wieloletnich prac badawczych i rozwojowych prowadzonych na Politechnice Rzeszowskiej. Głównym założeniem projektowym CPDev było stworzenie platformy, która będzie nie tylko zgodna z normą IEC 61131-3, ale również łatwa do przeniesienia na różne platformy sprzętowe i dostępna dla inżynierów oraz studentów jako narzędzie zarówno edukacyjne, jak i przemysłowe.
 
-Więksi producenci oferują również piloty uniwersalne z predefinowanymi sygnałami dla przycisków. Jednak,
-prawie zawsze są to grupy przycisków z modeli właśnie tego producenta. Uwadze nie umyka także wyższa cena takich
-rozwiązań argumentowana zazwyczaj prestiżem marki i jakością wykonania. Takie rozwiązanie znaleźć
-możemy na przykład w modelu Philips SRP4030/10\cite{expensiveController}.
+Jednym z głównych atutów CPDev jest modularność oraz szeroki zakres funkcjonalności obejmujący cały proces tworzenia aplikacji sterujących. Środowisko udostępnia zestaw edytorów tekstowych i graficznych, narzędzia do konfiguracji systemu, symulator sterownika oraz narzędzia do projektowania interfejsów HMI. Dzięki temu możliwe jest kompleksowe projektowanie i testowanie systemów sterowania bez konieczności stosowania zewnętrznych narzędzi.
 
-Dostępne są jednak także rozbudowane aplikacje z dedykowanymi urządzeniami wysyłającymi sygnały podczerwone łączące się ze smartfonem poprzez WiFi. Znajdujemy już w nich wiele z pożądanych cech w pilocie uniwersalnym, jak możliwość otrzymania predefiniowanych modeli telewizorów czy edycję nie wymagającą posiadania oryginalnego pilota do sterowanego urządzenia. Przykładowym dostępnym rozwiązaniem tego typu jest urządzenie Smart IR Remote Crabtree\cite{appController}.
-\subsection{Zestawienie z autorskim projektem}
-{Wymienione wcześniej urządzenia mają swoje zastosowania, ale nie wystrzegają się też wad. Wiele z nich wymaga zasilania bateryjnego, co jest szkodliwe dla środowiska, o które, szczególnie stara się dbać społeczeństwo w dzisiejszych czasach. Posiadają one często mozolne i łatwe w popełnieniu błędu programowanie. Dostęp do tworzenia własnych zestawów przycisków jest nierzadko trudny, czasem niemożliwy, a samo użycie często wymaga przchodzenia po niewidocznej liście i sprawdzeniu czy telewizor reaguje na predefiniowane przyciski. Urządzenia nieposiadające tych wad czyli aplikacje z dedykowaną stacją wysyłającą sterowanie do urządzeń domowych, łączą się jednak poprzez WiFi ze smartfonem, przez co pobierają więcej energii niż inne rozwiązania oraz wymagają podłączenia do sieci użytkownika, generując jej obciążenie.
+Ważną cechą CPDev jest jego niezależność sprzętowa, osiągnięta dzięki zastosowaniu warstwy pośredniej w postaci wirtualnej maszyny, która interpretuje kod pośredni generowany przez kompilator. Takie podejście umożliwia łatwe wdrażanie systemu na różnych urządzeniach, w tym na mikrokontrolerach, procesorach ARM, a nawet na implementacjach FPGA. Jednocześnie zapewnia ono jednolity sposób działania aplikacji niezależnie od platformy sprzętowej.
 
-Autorskie rozwiązanie systemu służacego za pilota do telewizora stara się rozwiązać przedstawione problemy. Bateria czy akumulator możliwe są do używania z~urządzeniem wysyłającym sygnały podczerwone, jednak z powodzeniem zasilanie może i~powinno odbywać się przez kabel microUSB, dzięki czemu nie zwiększany jest popyt na szkodliwe dla środowiska baterie. Programowanie przycisków odbywa się przez podanie kodów IR w odpowiednich polach, które sprawdzają czy dane w nich zawarte są poprawne, dzięki czemu użytkownik ma bezpośredni i przejrzysty dostęp do swoich ustawień pilota. Utworzony przez niego lub predefiniowany model telewizora wybierany jest z listy, którą można łatwo przeglądać i rozbudować. Sama aplikacja posiada kontrolę błędów konfiguracji oraz komunikacji bezprzewodowej i jest intuicyjna dla użytkownika już podczas pierwszego uruchomienia. Wymiana danych ze smartfonem odbywa się za pomocą technologii Bluetooth Low Energy co ogranicza zużycie energii. Zauważając, że z urządzenia pośredniczącego może korzystać wiele osób jednocześnie w większej skali jest to tańsze rozwiązanie niż piloty uniwersalne. Dodatkowo łatwość obsługi i przejrzystość interfejsu, które zapewnia aplikacja są atutami tego rozwiązania zwłaszcza dla osób starszych, nieobytych z technologią.
-}
-\clearpage
-\section{Przedstawienie wykorzystanych technologii}
-\subsection{Platforma ESP32}
-ESP32 jest układem typu SoC (ang. System-on-a-chip) produkowanym przez chińską firmę Espressif Systems,
-wyposażony jest najczęściej w dwurdzeniowy procesor Xtensa LX6 o taktowaniu 240 MHz\cite{esp32Datasheet}. W większości przypadków podczas rozwijania projektu używany jest będąc osadzonym na płytce deweloperskiej różnych producentów, co znacznie przyspiesza projektowanie i prototypowanie rzeczywistego systemu. Na rynku znajduje sie niezliczona ilość różnych wersji płytek deweloperskich przez co dopasowanie
-jej do własnych potrzeb jest dużo łatwiejsze niż w przypadku innych rozwiązań. Przykładem takiej płytki, która została też użyta w projekcie, jest DOIT DevKit V1\cite{doitDevKitV1}. Na rysunku \ref*{Fig:devkitScheme} przedstawiono poglądowy shemat wyprowadzeń tej płytki deweloperskiej.
+Środowisko CPDev jest stale rozwijane i udoskonalane. W kolejnych wersjach wprowadzano m.in. wsparcie dla języków graficznych, rozszerzenia dla systemów wielordzeniowych, interfejsy XML pozwalające na współpracę z innymi narzędziami inżynierskimi oraz rozwiązania umożliwiające projektowanie zgodnie z podejściem MDD (Model-Driven Development). CPDev znalazł już zastosowanie w wielu wdrożeniach przemysłowych — zarówno w kraju, jak i za granicą.
 
-\begin{figure}[ht]
-   \centering
-   \includegraphics[width=13cm]{images/doit_devkit_v1.png}
-   \caption{Schemat wyprowadzeń płytki DOIT DevKit V1 \cite{doitDevKitV1}}
-   \label{Fig:devkitScheme}
-\end{figure}
+Z punktu widzenia użytkownika, środowisko CPDev oferuje funkcjonalności znane z komercyjnych rozwiązań, przy czym wyróżnia się większą otwartością, możliwością adaptacji do konkretnych potrzeb oraz dostępnością szczegółów implementacyjnych. To wszystko sprawia, że CPDev stanowi atrakcyjną alternatywę wobec zamkniętych środowisk oferowanych przez producentów sprzętu automatyki.
+\subsection{Programowanie za pomocą CPDev-a}
+\subsubsection{Ogólny sposób korzystania z narzędzia}
+Programowanie w środowisku CPDev odbywa się w ramach graficznego interfejsu IDE, które integruje różne etapy projektowania systemu automatyki: od pisania kodu sterującego, przez konfigurację sprzętu i symulację, aż po wdrożenie na urządzenie docelowe. Proces ten można podzielić na kilka etapów:
 
-Jednym z kluczowych atutów platformy ESP32 jest wbudowane wsparcie dla Wi-Fi(802.11 b/g/n) i Bluetooth(klasyczny 4.2 i BLE), co umożliwia łatwe połączenie z siecią bezprzewodową oraz sprawną komunikację między urządzeniami zewnętrznymi.
-Duża licz\-ba portów wejścia/wyjścia czyni go idealnym do obsługi wielu czujników, akscesoriów i modułów. Układ zawiera także zintegrowany konwerter analogowo-cyfrowy (ADC) umożliwiając precyzyjny pomiar sygnałów analogowych. System zawiera wiele innych możliwości, ale najważniejsze jego funkcjonalości i charakterystyczne cechy, firma Espressif zebrała na digramie,  który znalazł się na rysunku \ref*{Fig:functionalDiagram}.
+Tworzenie projektu - użytkownik definiuje strukturę programu, dodaje nowe jednostki organizacyjne (POUs), deklaruje zmienne globalne i lokalne.
 
-\begin{figure}[ht]
-   \centering
-   \includegraphics[width=12cm]{images/esp32_functional_diagram.png}
-   \caption{Diagram funkcjonalności zaczerpnięty z dokumentacji techniczej ESP32\cite{esp32Datasheet}}
-   \label{Fig:functionalDiagram}
-\end{figure}
+Kodowanie logiki sterowania - za pomocą jednego lub kilku języków normy IEC 61131-3.
 
-ESP32 został zoptymalizowany pod kątem efektywnego zużycia energii, co sprawia, że jest bardzo dobrym
-wyborem dla aplikacji zasilanych bateryjnie lub kiedy ważny jest niski pobór prądu projektowanego systemu. Jego wszechstronność objawia
-się obsługą przeróżnych protokołów komunikacji przewodowej,
-takich jak SPI, I2C, UART, co sprawia, że integrację z zewnętrznymi modułami i systemami, można przeprowadzić w szybki i dostosowany do konkretnego przypadku sposób.
+Konfiguracja sprzętu i zmiennych wejściowo-wyjściowych - z użyciem narzędzia CPCon.
 
-Warto podkreślić, że ESP32 cieszy się uznaniem wśród deweloperów, co przekłada się na dostęp do obszernej dokumentacji oraz wsparcie online na forach użytkowników. Programowalność w języku Arduino oraz możliwość korzystania
-z MicroPython dodatkowo zwiększają elastyczność platformy, umożliwiając dostosowanie do indywidualnych potrzeb projektu.
-Nieocenione są także biblioteki i moduły tworzone przez społeczność i udostępniane w formie otwartoźródłowej.
-\subsection{Język programowania C++}
-C++ jest językiem programowania, który swoje zastosowanie znalazł w wielu dziedzinach, gdzie ceni się wydajność rozwiązania. Mimo tego, że powstał w latach 80-dziesiątych na podstawie języka C, jego najnowsze wersje zdecydowanie można zaliczyć do nowoczesnych języków programowania.
+Symulacja i testowanie - możliwa dzięki narzędziu CPSim, które pozwala uruchomić aplikację sterującą w trybie offline.
 
-Język ten jest kompilowany oraz stosuje silne typowanie statyczne, dzięki czemu, wykrywanie błędów na etapie tworzenia kodu jest znacznie łatwiejsze niż w przypadku innych podejść tworzenia programu wynikowego. Charakteryzuje się on także niskopoziomowym dostępem do pamięci, jak i możliwością jej dynamicznej alokacji w trakcie trwania programu, co zapewnia elastyczność implementacji i wysoką wydajność. C++ daje także możliwość korzystania z specyfikatora inline, który użyty dla funkcji powoduje, że kompilator kopiuje jej kod w zadane miejsce, zamiast umieszczać tam wkaźnik do niej. Przekłada się to na minimalizację narzutu czasowego związanego z wywołaniami bloków funkcyjnych. Język ten umożliwia także stosowanie podejścia obiektowego do projektowania oprogramowania, co z kolei sprzyja modularności rozwiązania i łatwości utrzymania kodu\cite{cppBjarne}.
+Generowanie kodu pośredniego (VMASM) - po kompilacji, aplikacja może zostać załadowana do wirtualnej maszyny uruchamianej na docelowym sterowniku.
 
-Wydajność i możliwość niskopoziomowej kotroli zasobów urządzenia powoduje, że język ten jest  najczęściej używany do programowania skomplikownych gier
-komputerowych, protokołów komunikacyjnych oraz systemów wbudowanych. Przez jego popularność dla systemów osadzonych, powstało wiele współracujacych z nim frameworków i bibliotek do obsługi rozmaitych mikrokontrolerów. Dzięki temu wybierając C++ jako język tworzenia oprogramowania systemu wbudowanego zyskuje się bardzo dużą kontrolę nad sprzętem oraz elastyczność w doborze narzędzi deweloperskich.
+\subsubsection{Dostępne języki programowania}
+CPDev wspiera wszystkie języki określone w normie IEC 61131‑3, co pozwala użytkownikom wybrać najbardziej odpowiedni sposób definiowania logiki sterującej w zależności od specyfiki projektu lub preferencji osobistych.
 
-\subsection{Framework Arduino}
-Framework Arduino to otwarte oprogramowanie, które umożliwia łatwe tworzenie aplikacji dla mikrokontrolerów zgodnych z standardem płytek Arduino. Bazuje na języku programowania C++ oraz wykorzystuje uproszczoną warstwę abstrakcji, co sprawia, że jest przyjazny dla początkujących, jednocześnie oferując zaawansowane funkcje dla doświadczonych programistów\cite{arduinoIntroduction}.
+a) ST (Structured Text)
+Język ST jest tekstowym językiem wysokiego poziomu, przypominającym składnią Pascala lub języki z rodziny C. Oferuje bogaty zestaw struktur sterujących (pętle, warunki, bloki), obsługę typów prostych i złożonych oraz wyrażeń logicznych i arytmetycznych. CPDev umożliwia pisanie całych aplikacji w ST, a także używanie go do definiowania funkcji i bloków funkcyjnych.
 
-Framework oferuje prostą obsługę wejścia/wyjścia (I/O), dzięki czemu integracja z czujnikami, przekaźnikami i wieloma innymi modułami jest błyskawiczna i intuicyjna. Ponadto, zapewnia prosty sposób dostęp do interfejsów komunikacyjnych,
-takich jak UART, SPI czy I2C. Ważną częścią frameworka Arduino są też przyjazne w~użyciu biblioteki tworzone także przez użytkowników, przez co niemal zawsze znajdzie się kod obsługujący żądaną funkcjonalność. Obejmują one obszar komunikacji bezprzewodowej, obsługi czujników, sterowania silnikami, czy obsługi ekranów LCD i OLED. Każde z nich są regularnie poprawiane przez firmę lub społeczność, dzięki czemu oprogramowanie staje się szybko aktualne i wspiera nowo dodane urządzenia i~narzędzia.
-\subsection{Komunikacja za pomocą podczerwieni}
-Komunikacja poprzez podczerwień\cite{infrared} (IR - Infra-Red) to forma przesyłania danych, wykorzystująca fale elektromagnetyczne
-o niższej częstotliwości niż światło widzialne. Fale podczerwone znajdują się w zakresie elektromagnetycznym
-poniżej czerwonego końca widma światła widzialnego, typowo w~zakresie od 300 GHz do 400 THz. Te fale są
-niewidoczne dla ludzkiego oka, ale mogą być wykrywane i generowane przez diody. Typowo
-wysyłając sygnał według konkretnego protokołu moduluje się go według określonego kodu liczbowego.
-Modulacja może obejmować zmianę amplitudy, częstotliwości lub fazy fali podczerwonej. Gdy sygnał dociera do odbiornika
-(zazwyczaj zasięg komunikacji wynosi do 10m), odbiornik wyposażony także w diodę interpretuje odebrany sygnał, przeprowadzając proces demodulacji do kodu
-liczbowego. Z tak wysłanej informacji może teraz skorzystać urządzenie odbierające i podjąć na jej podstawie działania.
+b) IL (Instruction List)
+IL to język niskopoziomowy, przypominający asembler. Umożliwia precyzyjne określanie instrukcji operujących na rejestrach i zmiennych. Jego stosowanie w CPDev jest obecnie rzadsze, ponieważ został wycofany z najnowszej wersji normy IEC 61131-3, ale nadal pozostaje dostępny dla kompatybilności.
 
-W standardzie NEC\cite{necIR}, czyli najpopularniejszym sposobie przesyłania sygnałów do urządzeń RTV za pomocą światła podczerownego, zastosowana jest modulacja częstotliwośći. Każda wiadomość w tym typie komunikacji rozpoczyna się od stosunkowo długiego stanu wysokiego natężenia światła trwającego 9 ms, po czym następuje 4,5 ms przerwy sygnalizując tym samym rozpoczęcie nadawania. Chcąc teraz wysłać logiczną ,,1'', należy wygenerować stan wysoki natężenia światła podczerwonego na 562.5µs i po nim odczekać 562.5 µs nie wysyłając już niczego. Logiczne ,,0'' wysyłane jest przez taki sam zabieg, jednak z przerwą po stanie wysokim wynoszącą 1.6875 ms. Aby bit został odczytany przez odbiornik każda przerwa musi być zakończona następnym stanem wysokim natężenia fali światła, dlatego kiedy kończona jest transmisja, po ostatniej przerwie generowany jest dodatkowy puls długości 562.5 µs, aby odbiornik mógł odczytać długość przerwy ostatniego bitu. Wykres ilustrujący elementarna generację sygnału w tym standardzie przedstawia rysunku \ref*{Fig:necOnesZerosFigure}.
-\begin{figure}[ht]
-   \centering
-   \includegraphics[width=8cm]{images/necOnesAndZeros.png}
-   \caption{Wykres elementarnej modulacji sygnału standardu NEC}
-   \label{Fig:necOnesZerosFigure}
-\end{figure}
+c) FBD (Function Block Diagram)
+FBD jest językiem graficznym, który pozwala na tworzenie logiki poprzez łączenie bloków funkcyjnych w sposób przypominający schematy blokowe. Jest chętnie wykorzystywany przez inżynierów o mniejszym doświadczeniu programistycznym, szczególnie w przemyśle.
 
-Aby wysłać pełne rządanie, które może być interpretowane przez odbiornik, trzeba wysłać informację opatrzoną w pewną strukturę. Najpierw wysyłany jest sygnał rozpoczęcia nadawania. Następnie wysyłany jest 8 bitowy adres urządzenia odbierającego sygnał i kolejno jego negacja bitowa. W takim sam sposób wysyłane jest 8 bitów danych i ich negacja bitowa. Tak zbudowana pojedyncza ramka danych, potrzebuje zawsze 67,5 ms, aby zostać wysłaną, niezależnie od wysyłanych danych i adresu urządzenia dzięki negacji bitowej obu tych segmentów. Przykładowe wysłanie kodu liczbowego 0xAD do urządzenia o adresie 0xFF przedstawione zostało na wykresie znajdującym się na rysunku \ref*{Fig:necFrame}.
+d) LD (Ladder Diagram)
+LD, znany także jako język drabinkowy, to język graficzny inspirowany schematami przekaźnikowymi. Ułatwia migrację klasycznych systemów sterowania przekaźnikowego do programowalnych sterowników PLC. CPDev umożliwia tworzenie programów w LD i konwersję do ST.
 
-\begin{figure}[ht]
-   \centering
-   \includegraphics[width=13cm]{images/necFrame.png}
-   \caption{Przykładowa modulacja sygnału pełnej wiadomości standardu NEC}
-   \label{Fig:necFrame}
-\end{figure}
+e) SFC (Sequential Function Chart)
+SFC jest językiem służącym do modelowania logiki sekwencyjnej. Program składa się z kroków, przejść i warunków przejścia. W CPDev sekwencyjna struktura tworzona jest graficznie, a logika kroków i przejść może być zapisana w ST lub FBD.
+\subsection{Implementacja CPDeva i architektura maszyny wirtualnej}
+Implementacja środowiska CPDev została oparta na założeniu, że system sterowania powinien być niezależny od konkretnej platformy sprzętowej, a zarazem możliwy do wdrożenia w rzeczywistych aplikacjach przemysłowych. Aby to osiągnąć, architektura CPDev została podzielona na dwa główne poziomy: środowisko deweloperskie (IDE) oraz maszynę wirtualną (VM), która wykonuje wygenerowany program sterujący.
 
-\subsection{System operacyjny Android}
-System Android, rozwijany przez firmę Google, stanowi środowisko operacyjne oparte na otwartym kodzie źródłowym. Przyczynia się to do jego wyjątkowej elastyczności i dostosowywalności do różnych urządzeń mobilnych, głównie
-smartfonów i tabletów, ale z powodzeniem stosowany jest także w innych urządzeniach przenośnych.
+Środowisko deweloperskie
+IDE CPDev zostało zaimplementowane w języku C\# na platformę .NET, co zapewnia nowoczesny interfejs graficzny, wygodę użytkowania i łatwość dalszej rozbudowy. Składa się z modularnych komponentów, takich jak edytory kodu źródłowego, narzędzia konfiguracyjne, symulatory, analizatory błędów i generator kodu pośredniego. Zastosowanie C\# i środowiska .NET pozwala na integrację z innymi narzędziami, obsługę graficznych języków programowania oraz wprowadzanie rozwiązań typowych dla nowoczesnych aplikacji okienkowych (GUI).
 
-Otwartość kodu umożliwia deweloperom z całego świata dostosowywanie systemu do specyficznych potrzeb. Istotną cechą Androida jest także jego wszechstronność, manifestująca się w szerokiej gamie dostępnych
-urządzeń pracujących z tym systemem operacyjnym.
-Instalowany jest on na urządzeniach z wszystkich przedziałów cenowych, umożliwiając
-programistom tworzenie aplikacji dostępnych dla każdej z grup odbiorców. Sklep Google Play, jako główne źródło
-aplikacji, gier, multimediów i innych treści, stanowi istotny element ekosystemu Androida. Ponadto, integracja
-z usługami Google, takimi jak Gmail, Google Drive, Google Maps i wielu innych sprawia, że można niemal każdą czynność wykonać przy pomocy dedykowanej aplikacji firmy Google. Względna jednolitość tego środowiska, pomimo takiej gamy obsługiwanych urządzeń sprawia, że dla programistów stanowi ono atrakcyjne pole do
-rozwoju i tworzenia innowacyjnych rozwiązań. Platforma jest też bradzo opłacalnym polem biznesowym z uwagi na szeroką bazę użytkowników oraz dynamiczny rynek aplikacji mobilnych. Nie jest więc dziwne, że urządzenia z Androidem posiadało 69,74\% wszytskich użytkowników urzadzeń mobilnych i był on wciąż najczęściej używanym systemem operacyjnym w 2022 roku\cite{androidStats}.
-\subsection{Język programowania Dart}
-Dart to język programowania stworzony przez Google, zaprojektowany z myślą o tworzeniu wydajnych, skalowalnych i nowoczesnych aplikacji. Jego głównym zastosowaniem jest budowa interaktywnych stron internetowych oraz aplikacji mobilnych przy użyciu zestawu narządzi Flutter.
+Kluczowym elementem działania środowiska jest kompilator, który tłumaczy kod źródłowy napisany w językach normy IEC 61131‑3 (głównie ST) do VMASM – pośredniego kodu niskiego poziomu wykonywanego przez maszynę wirtualną.
 
-Język ten charakteryzuje się statycznym typowaniem, co oznacza, że typy zmiennych sprawdzane są w trakcie budowania aplikacji, co może pomóc w wykrywaniu błędów przed uruchomieniem programu. Dart wspiera i opiera się głównie na programowaniu obiektowym.
+Maszyna wirtualna (VM)
+Maszyna wirtualna CPDev to lekki, niezależny od sprzętu interpreter kodu VMASM, implementowany głównie w języku ANSI C, co zapewnia wysoką przenośność. Dzięki temu może ona działać na wielu różnych platformach sprzętowych, w tym na mikrokontrolerach (np. AVR, ARM), systemach wbudowanych (np. Raspberry Pi, STM32), a także w symulacji na komputerze PC.
 
-Jedną z ważnych cech Darta, jest również jego zdolność do wykonywania kodu zarówno w trybie just-in-time (JIT) jak i ahead-of-time (AOT). Tryb JIT umożliwia szybkie rozwijanie i testowanie aplikacji, podczas gdy tryb AOT pozwala na kompilację
-kodu źródłowego do natywnego kodu maszynowego, co zwiększa wydajność aplikacji podczas działania. Dart oferuje także mechanizmy asynchroniczne, co jest niezwykle istotne w programowaniu współbieżnym i obsłudze operacji wejścia/wyjścia bez blokowania głównego wątku\cite{dartInfo}.
+Główne cechy maszyny wirtualnej CPDev:
 
-W kontekście frameworka Flutter, język ten staje się kluczowym narzędziem budowy interfejsów użytkownika. Sam wspomniany zestaw narzędzi został napisany przy pomocy Darta i to z nim najlepiej współpracuje.
-\subsection{Framework Flutter}
-Flutter to otwartoźródłowy zestaw narzędzi (SDK - Software Development Kit) stworzony przez Google do budowy interfejsów użytkownika (UI - User Inferface). Jest wykorzystywany do tworzenia aplikacji mobilnych, webowych i desktopowych, ze wskazaniem na aplikacje mobilne. Jednym z głównych atutów Fluttera jest możliwość tworzenia jednego kodu źródłowego, który może być budowany do aplikacji dla różnych platform, takich jak Android, iOS, web, Windows czy Linux.
+Interpretacja kodu pośredniego – wykonywanie instrukcji zdefiniowanych w języku VMASM, które odpowiadają operacjom sterowania, przetwarzania danych, wywołań funkcji, obsługi zmiennych i struktur danych.
 
-W centrum Fluttera znajduje się Dart, który jest używany do definiowania interfejsu użytkownika oraz logiki biznesowej.
-SDK ten bazuje na podejściu deklaratywnym, co oznacza, że w kodzie opisuje się, jak ma wyglądać interfejs w danym momencie, a~nie jak ma być aktualizowany w odpowiedzi na różne zdarzenia. To podejście ułatwia zrozumienie i utrzymanie kodu.
-Wprowadza on również własny silnik renderujący. Dzięki temu, dobrze zaprojektowane aplikacje Fluttera charakteryzują się płynnością i~responsywnością.
+Obsługa standardowych typów danych – BOOL, INT, REAL, TIME, DATE, STRING, ARRAY, STRUCT itd.
 
-Zestaw oferuje bogatą gamę wbudowanych widgetów, które są podstawowymi elementami budującymi interfejs użytkownika. Programiści mogą również tworzyć własne niestandardowe widgety, co umożliwia pełną swobodę w projektowaniu UI.
+Zarządzanie cyklicznym wykonywaniem programu sterującego – logika sterowania wykonywana jest w pętli cyklicznej, zgodnie z zasadami działania typowego sterownika PLC.
 
-Flutter wspiera hot-reloading, co pozwala na natychmiastowe obserwowanie zmian wprowadzanych w kodzie bez konieczności ponownego uruchamiania całej aplikacji. Korzystanie z tego mechanizmu znacznie skraca się czas pracy podczas rozwijania projektu.
-Dzięki narzędziom takim jak Flutter DevTools, umożliwiony jest dostęp do zaawansowanych narzędzi do analizy, debugowania i optymalizacji aplikacji końcowej.\cite{flutterDocs}
+Zgodność z IEC 61131‑3 – pełne wsparcie dla elementów programistycznych normy, w tym POU (Program Organization Units), czyli programów, funkcji i bloków funkcyjnych.
 
-Framework ten stał się niebywale popularny wśród programistów. Chcąc tworzyć estetyczne, responsywne i wieloplatformowe aplikacje z minimalnym nakładem pracy, mając do dyspozycji obszerną i interaktywną dokumnetację, jednym z najlepszych wyborów jest wybranie Fluttera jako główne nardzędzie tworzenia interfejsu użytkownika.
-\subsection{Komunikacja przez Bluetooth Low Energy}
-Bluetooth Low Energy(BLE) to technologia komunikacyjna zaprojektowana do efektywnej wymiany danych pomiędzy urządzeniami przy niskim zużyciu energii. Jest uproszczoną i zoptymalizowaną wersją klasycznego Bluetooth.
-Komunikacja za pomocą BLE opiera się na koncepcji dwóch głównych typów urządzeń: urządzenia peryferyjnego i centralnego. Urządzenie peryferyjne emituje dane, podczas gdy urządzenie centralne zbiera te dane.\cite{ble}
+Łatwa integracja – dzięki modularności i lekkiej strukturze możliwa jest łatwa integracja VM z innymi systemami, np. przez protokoły komunikacyjne lub interfejsy HMI.
 
-Cechą charakterystyczną BLE jest niskie zużycie energii, co sprawia, że jest idealny do zastosowań, gdzie ważne jest przedłużenie życia baterii w urządzeniach przenośnych. Komunikacja BLE opiera się na transmisji krótkich pakietów danych, co przyczynia się do wysokiej efektywności energetycznej.
+Dodatkowo, maszyna wirtualna posiada także wersję uruchamianą bezpośrednio w systemie Windows, wykorzystywaną przez symulator CPSim, który umożliwia testowanie aplikacji sterujących bez konieczności posiadania fizycznego sterownika.
 
-Usługi w BLE to logiczne grupy charakterystyk, które reprezentowane są jako zestawy danych, udostępniające funkcjonalności lub zestawy operacji odpowiednie dla danej grupy. Charakterystyki z kolei to konkretne funkcje lub dane w ramach danej usługi. GATT (Generic Attribute Profile) jest z kolei protokołem używanym w BLE do opisu i komunikacji z usługami i charakterystykami poprzez klienta GATT. Każda usługa i charakterystyka posiada swój numer UUID.
+Architektura ogólna
+Architektura CPDev zakłada wyraźny podział odpowiedzialności:
 
-Komunikacja między urządzeniem centralnym, a peryferyjnym, opiera się na zestawie reguł znanych jako GATT Server (na urządzeniu peryferyjnym) i GATT Client (na urządzeniu centralnym). GATT Server udostępnia usługi i charakterystyki, natomiast GATT Client korzysta z protokołu GATT do odczytywania i zapisywania danych.
+IDE (C\#/.NET)	Edycja kodu, analiza, konfiguracja, generowanie VMASM
+VMASM (pośredni język)	Przenośna reprezentacja logiki sterującej
+VM (ANSI C)	Wykonywanie kodu sterującego niezależnie od platformy
 
-Wiele bibliotek na rożne platformy sprzętowe umożliwia łatwe i szybkie obsługiwianie technologii Bluetooth Low Energy przez wydzielenie na wysokim poziomie abstrakcji funkcji, obiektów i metod zdecydowanie ułatwiających korzystanie z~tej technologii. Takie podejście zwalnia z programisty obowiązek zajęcia się niuansami w~projektach, w których nie są one krytycznymi elementami rozwiązania i pozwala na uniknięcie trudnych do zdiagnozowania błędów konfiguracji.
-
+Takie podejście pozwala rozdzielić rozwój środowiska programistycznego od rozwoju platform sprzętowych oraz zachować pełną kompatybilność i kontrolę nad działaniem systemu na różnych poziomach.
 \clearpage
 
+\section{Drzewa składniowe na podstawie gramatyki bezkontekstowej}
+\subsection{Wprowadzenie do gramatyk bezkontekstowych}
+Gramatyka bezkontekstowa (CFG, context-free grammar) to matematyczny model służący do opisu struktury formalnych języków, takich jak języki programowania. Składa się z:
+skończonego zbioru nieterminali (zmiennych),
+zbioru terminali (symboli końcowych, np. słów kluczowych, operatorów),
+zestawu produkcyjnych reguł, w których każdy nieterminal może być zastąpiony ciągiem terminali i/nieterminali,
+specjalnego symbolu startowego.
+Gramatyki bezkontekstowe są wystarczająco wyraźne, by opisać większość języków programowania (np. ST), ale jednocześnie na tyle proste, by dawać się wydajnie parsować algorytmicznie.
+
+\subsection{Drzewa składniowe}
+Drzewo składniowe to uporządkowana struktura w postaci drzewa, która wizualnie i strukturalnie odwzorowuje sposób, w jaki ciąg symboli terminalnych (np. kod programu) został wygenerowany przez gramatykę.
+
+Korzeń drzewa to symbol startowy.
+
+Węzły wewnętrzne reprezentują nieterminale.
+
+Liście odpowiadają terminalom (lub czasem symbolowi pustemu)
+
+Drzewo powstaje podczas parsowania: każda reguła produkcji zamienia nieterminal na jego dzieci w drzewie. Po lewej–prawej kolejności liści odczytujemy oryginalny ciąg słów, czyli kod źródłowy .
+
+Drzewo składniowe służy jako:
+
+Mapowanie struktury kodu (np. wyrażeń, instrukcji).
+
+Podstawa analiz semantycznych, jak sprawdzanie typów.
+
+Podstawowy model do generacji dalszego kodu (astrakcja, optymalizacja).
+
+\subsection{Zastosowanie parserów w IDE i narzędziach}
+W środowiskach takich jak CPDev parser generowany na podstawie gramatyki:
+umożliwia kolorowanie składni, podpowiedzi, autokompletację;
+wykrywa błędy już podczas pisania;
+wspiera refaktoryzację kodu i zabezpiecza przekształcenia kodu;
+dostarcza podstawę do generacji kodu pośredniego (e.g. VMASM).
+\clearpage
+
+\section{Przegląd narzędzi do automatycznego generowania drzew składni}
+\subsection{Bison}
+\subsection{Irony.Net}
+\subsection{ANTLRv4}
+\subsection{Porównanie}
+\clearpage
+\section{Utworzenie parsera języka ST przy pomocy ANTLRv4}
+\subsection{Przygotowanie środowiska i utworzenie struktury projektu}
+\subsection{Gramatyka - lexer}
+\subsection{Gramatyka - parser}
+\subsection{Ocena przygotowanego oprogamowania}
+\clearpage
+\section{Zakończenie}
+\clearpage
 \section{Urządzenie wysyłające sygnały IR}
 \subsection{Schemat elektryczny zaprojektowanego urządzenia}
 Aby wykonać urzadzenie pośredniczące najpierw wykonano shemat elektryczny przy pomocy programu EasyEDA w darmowej wersji online\cite{easyEda}. Dzięki bibliotekom tworzonym przez użytkowników odnaleziono wszystkie niezbędne elementy do działania urządzenia pośredniczącego. Utworzony schemat elektryczny powstały z użytych komponentów znajduje się na rysunku \ref*{Fig:deviceScheme}.
