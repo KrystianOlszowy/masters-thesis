@@ -1,1 +1,0 @@
-Metoda odpowiedzialna za zainicjowanie sprawdzania dzia³ania adaptera BLE

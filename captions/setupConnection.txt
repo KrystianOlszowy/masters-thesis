@@ -1,1 +1,0 @@
-Metoda inicjuj¹ca serwer BLE

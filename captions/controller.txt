@@ -1,1 +1,0 @@
-Publicznie dostêpne funkcjonalnoœci modu³u \kod{bt2ir\_controller}

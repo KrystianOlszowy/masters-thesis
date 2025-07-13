@@ -1,1 +1,0 @@
-Publcznie dostêpne metody utworzonej nak³adki steruj¹cej wyœwietlaczem OLED
