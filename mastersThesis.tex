@@ -35,8 +35,8 @@
 \abstractEN{The work encompasses a solution for television control through a smartphone application and an intermediary device, based on a microcontroller with necessary modules. It introduces and discusses the technologies and concepts employed during the design and building process. Additionally, it details the key components of the physical system, microcontroller software, the developed mobile application, and their collaboration for television device control.}
 
 %% DO ZROBIENIA %%
-\keywords{ST language, syntax tree, CPDev, Flutter, aplikacja mobilna}
-\keywordsEN{remote controller, BLE, IR, Flutter, mobile application}
+\keywords{ST language, syntax tree, CPDev, ANTLRv4, parser}
+\keywordsEN{język ST, drzewo składniowe, CPDev, ANTLRv4, parser}
 
 
 \begin{document}
@@ -186,7 +186,7 @@ Kluczowym elementem działania środowiska jest kompilator, który tłumaczy kod
 
 \clearpage
 
-\section{Drzewa składniowe na podstawie gramatyki bezkontekstowej}
+\section{Drzewa składniowe na podstawie gramatyk bezkontekstowych}
 \subsection{Wprowadzenie do gramatyk bezkontekstowych}
 Gramatyka bezkontekstowa (CFG, Context-Free Grammar) to matematyczny model służący do opisu struktury formalnych języków, takich jak języki programowania. Składa się z: skończonego zbioru symboli nieterminalnych (zmiennych), zbioru symboli terminalnych (symboli końcowych, np. słów kluczowych, operatorów), zestawu produkcyjnych reguł, w których każdy symbol nieteminalny może być zastąpiony ciągiem terminali i/lub nieterminali, specjalnego symbolu startowego. Najważniejszą ich cechą jest to, że zachowują swoje znaczenie niezależnie od kontekstu czyli otoczenia w którym znajduje się symbol. Gramatyki bezkontekstowe są wystarczająco wyraźne, by opisać większość języków programowania, ale jednocześnie na tyle proste, by dawać się wydajnie parsować algorytmicznie.\cite{contextFreeGrammar}
 
@@ -213,15 +213,95 @@ Drzewa składniowe mogą służyć jako:
    \item model do generacji kodu pośredniego lub docelowego wykorzystywany kompilatorach i interpreterach.
 \end{itemize}
 
-\subsection{Zastosowanie parserów w IDE i narzędziach}
-W zintegrowanych środowiskach programistycznych drzewa składniowe umożliwiają kolorowanie składni, dynamiczne podpowiedzi, sprawdzanie błędów składniowych, a także refaktoryzację kodu. Dla CPDev-a z uwagi na to, że korzysta on z translatora kodu źródłowego, drzewo składniowe kodu języka ST jest niezbędne do poprawnej analizy i interpretacji kodu. Automatyczna generacja drzewa składniowego na podstawie pliku gramatyki pozwoliłaby na ujednolicenie procesu tworzenia parsera, co jest niezwykle istotne w kontekście rozwoju środowiska CPDev. Dzięki temu możliwe byłoby łatwiejsze wprowadzanie zmian w gramatyce języka ST oraz szybsze dostosowywanie parsera do nowych wymagań.
+\subsection{Zastosowanie parserów w IDE}
+W zintegrowanych środowiskach programistycznych drzewa składniowe umożliwiają kolorowanie składni, dynamiczne podpowiedzi, sprawdzanie błędów składniowych, a także refaktoryzację kodu. Dla CPDev-a z uwagi na to, że korzysta on z translatora kodu źródłowego, drzewo składniowe kodu języka ST jest niezbędne do poprawnej analizy i interpretacji kodu. Automatyczna generacja drzewa składniowego na podstawie pliku gramatyki pozwoliłaby na ujednolicenie procesu tworzenia parsera, co jest niezwykle istotne dla rozwoju środowiska CPDev. Dzięki temu możliwe byłoby łatwiejsze wprowadzanie zmian w gramatyce języka ST oraz szybsze dostosowywanie parsera do nowych wymagań.
 \clearpage
 
-\section{Przegląd narzędzi do automatycznego generowania drzew składni}
-\subsection{Bison}
-\lstinputlisting[inputencoding=utf8/cp1250, language={C++}, caption={\protect\input{captions/drawMoveUp.txt}\protect\relax}, label={Lst:drawMoveUp}]{codes/drawMoveUp.cpp}
-\subsection{Irony.Net}
+\section{Przegląd narzędzi do tworzenia parserów automatycznie generujących drzewa składniowe}
+
+W kontekście niniejszej pracy parser składniowy posłuży do analizy języka Structured Text (ST), który jest jednym z pięciu języków programowania określonych w normie IEC 61131-3, używanych do programowania sterowników PLC. Parser ten zostanie zastosowany w ramach oprogramowania CPDev. Celem jest wygenerowanie drzewa składniowego programu ST, które może zostać następnie wykorzystane do dalszych analiz semantycznych, optymalizacji lub transformacji kodu źródłowego.
+
+Z uwagi na specyfikę CPDev  pisanego w języku C\# i bazującego na strukturach .NET  istotne jest, aby wybrane narzędzie do generowania parserów było kompatybilne z tą platformą, a także zapewniało czytelność, rozszerzalność i dobrą integrację z pozostałymi komponentami systemu. W dalszej części tego rozdziału przeprowadzona zostanie analiza wybranych narzędzi do towrzenia parserów automatycznie generujących drzewa składniowe pod kątem ich funkcjonalności, wydajności, wsparcia dla języka C\# oraz możliwości integracji z systemem CPDev. Na tej podstawie zostanie dokonany wybór najlepszego rozwiązania.
 \subsection{ANTLRv4}
+
+ANTLR (ANother Tool for Language Recognition) to generator parserów opracowany przez Terence'a Parra i jego zespół. Jego najnowsza wersja czyli ANTLR v4 została wydana w sierpniu 2024 roku i jest objęta licencją BSD3. Narzędzie to stanowi kulminację ponad 25 lat badań nad technikami parsowania języków formalnych. ANTLR4 wpiera aż 10 jezyków docelowych w których może zostać utworzony parser i są to: C++, C\#, Dart, Java, JavaScript, PHP, Python3, Swift, TypeScript oraz Go.\cite{antlr4GitHub} ANTLR v4 jest wykorzystywany w projektach akademickich i przemysłowych takich jak m.in. Twitter (zapytania), Hive i Pig w Hadoop, narzędzia Oracle (SQL Developer), Hibernate, NetBeans, Presto czy MySQL Workbench.\cite{antlr4Org}
+
+\subsubsection{Typ gramatyki i parsera}
+ANTLRv4 w utworzonym pareserze wykorzystuje algorytm Adaptive LL(*), często skracany jako ALL(*), będący znaczącym ulepszeniem względem klasycznych parserów LL(k) i wcześniejszej wersji ANTLRv3. W przeciwieństwie do statycznego LL(), ALL() dokonuje analizy lookahead dynamicznie podczas działania parsera, co pozwala na obsłużenie bardziej złożonych oraz naturalnych gramatyk bez konieczności ręcznej transformacji reguł.\cite{antlr4GitHub} Eliminuje też konieczność backtrackingu, typową dla wcześniejszych wersji ANTLR w sytuacjach niejednoznacznych\cite{Antlr4Optimisation}. Poniżej na listingu \ref{Lst:antlrv4SimpleGrammar} przedstawiono przykładową prostą gramatykę dla ANTLRv4 gdzie można zauważyć, że nie było wymagane wykonywanie skomplikowanej struktury zagnieżdzonej znanej z parserów typu top-down\cite{antlr4Book}, którym w istocie jest parser generowany przez to narzędzie.
+
+\lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/antlrv4SimpleGrammar.txt}\protect\relax}, label={Lst:antlrv4SimpleGrammar}]{codes/antlrv4SimpleGrammar.txt}
+
+ANTLRv4 umożliwia definiowanie reguł z rekurencją lewą np. \kod{expr: expr '+' expr;} co wcześniej było niemożliwe i sprawiało trudności w parserach typu top-down. Reguły te są automatycznie przekształcane przez ANTLR na odpowiedniki bez rekurencji przez wbudowane mechanizmy przepisujące gramatykę, zachowując przy tym prawidłową kolejność operatorów i skojarzenia. Jednak ANTLR obsługuje wyłącznie bezpośrednią rekurencję lewą i nie wspiera rekurencji pośredniej (czyli wzajemnej między różnymi regułami).
+
+\subsubsection{Ogólny proces generowania parsera}
+Proces tworzenia parsera za pomocą ANTLR v4 składa się z kilku nieskomplikowanych kroków, które umożliwiają automatyczne wygenerowanie analizatora składniowego na podstawie formalnej gramatyki języka:
+
+\begin{enumerate}[label=\arabic*., leftmargin=1.25cm]
+\item 
+Zdefiniowanie gramatyki - Pierwszym krokiem jest utworzenie pliku z rozszerzeniem .g4, w którym zapisuje się reguły gramatyki w notacji zbliżonej do EBNF. Gramatyka zawiera definicje tokenów (reguły leksykalne) oraz struktur językowych (reguły parsera).
+\item Uruchomienie generatora - Korzystając z narzędzia antlr4 (np. z wiersza poleceń), generuje się zestaw klas parsera i leksera w wybranym języku programowania (np. C\#, Java, Python). Na przykład dla języka C\#: \kod{java -jar antlr-4.X-complete.jar -Dlanguage=CSharp Expr.g4}
+\item Integracja z aplikacją - Wygenerowane klasy mogą zostać dołączone do projektu w wybranym środowisku programistycznym. Z parsera można korzystać poprzez utworzenie instancji klasy leksera i parsera, a następnie przekazanie do nich kodu źródłowego jako tekstu.
+\item Obsługa wynikowego drzewa składniowego - ANTLR umożliwia automatyczne przetwarzanie wygenerowanego drzewa składniowego przy pomocy wzorców Visitor lub Listener, co pozwala na dalszą analizę, interpretację lub transformację kodu.
+
+\item Obsługa błędów i debugowanie - Parser domyślnie obsługuje wykrywanie i raportowanie błędów składniowych, a użytkownik może nadpisać domyślne zachowanie (np. logowanie, zatrzymanie parsowania lub odzyskiwanie po błędach).
+\end{enumerate}
+
+Dzięki oddzieleniu gramatyki od logiki aplikacji i wsparciu wielu języków programowania, ANTLR v4 umożliwia łatwe i szybkie tworzenie parserów z pełnym drzewem składniowym gotowym do dalszego przetwarzania.
+
+\subsubsection{Tworzenie gramatyki}
+Gramatyka w ANTLR v4 zapisywana jest w plikach z rozszerzeniem \kod{.g4} i definiowana w notacji zbliżonej do EBNF (Extended Backus-Naur Form). Plik gramatyki zawiera dwie główne sekcje:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+   \item Reguły parsera - definiują strukturę języka, czyli jak poszczególne elementy (np. wyrażenia, instrukcje) są zbudowane z tokenów. Nazwy reguł zaczynają się małą literą.
+   \item Reguły leksykalne - definiują tokeny, czyli podstawowe elementy składniowe (np. liczby, słowa kluczowe, operatory). Nazwy reguł zaczynają się wielką literą.
+\end{itemize}
+Aby zobrazować sposób tworzenia gramatyki w ANTLR v4, poniżej na listingu  \ref{Lst:antlrv4BiggerGrammar}  przedstawiono prostą gramatykę dla wyrażeń arytmetycznych i przypisań. Na początku definiowana jest w niej reguła startowa \kod{program}, która określa, że analizowany tekst składa się z wielu instrukcji zakończonych końcem pliku. Następnie wprowadzone są reguły odpowiadające różnym typom instrukcji, takim jak przypisania i instrukcje warunkowe. Dalej znajduje się reguła \kod{expr}, która opisuje strukturę wyrażeń arytmetycznych i odniesień do zmiennych.
+
+W drugiej części gramatyki znajdują się reguły leksykalne. Określają one sposób rozpoznawania słów kluczowych, identyfikatorów i liczb całkowitych. Na końcu dodano reguły pomijające znaki białe oraz komentarze, aby nie były uwzględniane w analizie składniowej.
+
+\lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/antlrv4BiggerGrammar.txt}\protect\relax}, label={Lst:antlrv4BiggerGrammar}]{codes/antlrv4BiggerGrammar.txt}
+
+\subsubsection{Analiza drzewa składniowego}
+ANTLR v4 automatycznie generuje pełne drzewo składniowe (Concrete Syntax Tree, CST) na podstawie zdefiniowanej gramatyki. Drzewo to reprezentuje dokładną strukturę analizowanego kodu źródłowego i może być wykorzystane do dalszego przetwarzania na różne sposoby.
+
+Jednym z najczęściej stosowanych podejść jest wzorzec \kod{Visitor}, który pozwala na kontrolowane przechodzenie po węzłach drzewa i wykonywanie operacji zależnych od typu konstrukcji składniowej. Wzorzec ten doskonale sprawdza się przy analizie semantycznej, generowaniu kodu lub przekształceniach drzewa. Alternatywnie, ANTLR udostępnia również mechanizm \kod{Listenera}, który umożliwia reagowanie na wejście i wyjście z każdego węzła reguły gramatycznej w kolejności predefiniowanej przez parser. Listener sprawdza się m.in. przy prostym zbieraniu informacji lub pasywnym śledzeniu struktury kodu.
+
+W praktyce często zachodzi potrzeba uproszczenia struktury drzewa składniowego poprzez konwersję CST do własnej reprezentacji AST (Abstract Syntax Tree). ANTLR tego nie generuje automatycznie, ale umożliwia łatwe ręczne budowanie AST podczas odwiedzania węzłów drzewa — np. przez klasy Visitor.
+
+Dodatkowo ANTLR wspiera narzędzia wizualne, takie jak ANTLR Tool czy ANTLRWorks, które pozwalają graficznie przeglądać drzewa składniowe i śledzić przebieg analizy. Ułatwia to zarówno testowanie parsera, jak i debugowanie trudnych przypadków związanych z niejednoznacznością lub błędami składniowymi.
+
+\subsubsection{Obsługa błędów}
+ANTLR v4 udostępnia zaawansowane mechanizmy obsługi błędów składniowych, które umożliwiają zarówno wykrywanie, jak i kontrolowane reagowanie na nieprawidłowości w analizowanym kodzie źródłowym. Domyślnie parser korzysta z klasy DefaultErrorStrategy, która implementuje mechanizm tzw. odzyskiwania po błędach (error recovery). Zamiast przerywać analizę po wykryciu pierwszego błędu, parser stara się kontynuować analizę wejścia, ignorując fragmenty niezgodne z gramatyką lub dokonując prostych poprawek (np. pominięcie niespodziewanego tokena lub podstawienie brakującego). Takie podejście pozwala parserowi wykryć i zgłosić wiele błędów w jednym przebiegu, co jest szczególnie przydatne przy analizie większych plików źródłowych.
+
+W sytuacjach, w których wymagane jest bardziej rygorystyczne podejście, można zastosować strategię BailErrorStrategy, która natychmiast przerywa analizę po napotkaniu pierwszego błędu składniowego. Taki sposób działania znajduje zastosowanie w przypadkach, gdzie analiza częściowo niepoprawnego kodu nie ma sensu lub gdy parser ma być elementem wrażliwego systemu przetwarzania danych, gdzie konieczna jest pełna poprawność wejścia.
+
+ANTLR umożliwia również implementację własnych strategii obsługi błędów, poprzez dziedziczenie po klasie ANTLRErrorStrategy lub BaseErrorListener. Dzięki temu możliwe jest dokładne dostosowanie sposobu raportowania błędów do potrzeb projektu - np. wzbogacenie komunikatów diagnostycznych, przekazywanie błędów do logów systemowych, a także kontrola lokalizacji i kontekstu błędów. Pozwala to tworzyć parsery bardziej przyjazne dla użytkownika końcowego, szczególnie w środowiskach takich jak CPDev, gdzie czytelna diagnostyka błędów może znacząco wspierać proces tworzenia i testowania kodu.
+
+ANTLR oferuje także możliwość podłączenia wielu słuchaczy błędów (error listeners), co umożliwia np. jednoczesne logowanie do pliku, wyświetlanie w interfejsie graficznym oraz rejestrowanie metadanych na potrzeby testów. Takie podejście daje dużą elastyczność w integrowaniu parsera z różnymi komponentami systemu.
+
+Obsługa błędów stanowi jeden z mocnych elementów ANTLR v4 - parser może działać zarówno w trybie diagnostycznym, jak i produkcyjnym, w zależności od wybranej konfiguracji. Dzięki temu narzędzie to dobrze sprawdza się w rzeczywistych zastosowaniach, gdzie nie tylko poprawna analiza poprawnego kodu, ale również umiejętność reagowania na błędy użytkownika jest kluczowa.
+\subsubsection{Wydajność i rozszerzalność}
+ANTLR v4 opiera się na strategii parsowania LL(*), która wykorzystuje pełny kontekst lewego do prawego przetwarzania wejścia z dowolnie długim spojrzeniem w przód. Choć podejście to może być wolniejsze w porównaniu do analizatorów opartych na technikach LR (np. LALR czy GLR), zwłaszcza w przypadku bardzo dużych lub silnie niejednoznacznych gramatyk, to w praktyce zapewnia ono wystarczającą wydajność dla większości zastosowań, zwłaszcza gdy celem jest czytelność, utrzymywalność i rozszerzalność kodu. W przypadku języków takich jak ST, które mają umiarkowaną złożoność składniową, parsery generowane przez ANTLR działają płynnie i stabilnie.
+
+Jednym z kluczowych atutów ANTLR jest jego rozszerzalność. Parsery można łatwo rozbudowywać o własne akcje semantyczne, klasy pomocnicze czy niestandardowe mechanizmy przetwarzania. Możliwe jest np. dynamiczne podstawianie reguł, filtrowanie węzłów drzewa składniowego lub implementacja własnych systemów diagnostycznych i logujących. Taka elastyczność pozwala na ścisłe dopasowanie parsera do specyfiki analizowanego języka lub systemu, w którym jest on wykorzystywany – jak np. w środowisku CPDev.
+
+ANTLR zachęca również do modularnego projektowania analizatorów, co oznacza, że każdy element (lexer, parser, AST visitor) może być rozwijany niezależnie. Drzewo składniowe można łatwo przekształcać w AST, a następnie analizować, przekształcać lub kompilować przy użyciu osobnych modułów – np. translatorów do kodu maszynowego, optymalizatorów lub narzędzi do statycznej analizy semantycznej. Takie podejście umożliwia budowę złożonych kompilatorów i interpreterów opartych na ANTLR, przy jednoczesnym zachowaniu wysokiego poziomu kontroli i elastyczności w rozwoju oprogramowania.
+
+\subsubsection{Dokumentacja, licencja i wsparcie społeczności}
+ANTLR v4 jest bardzo dobrze udokumentowanym i aktywnie rozwijanym narzędziem, co czyni go przyjaznym wyborem zarówno dla początkujących, jak i zaawansowanych użytkowników. Podstawowym źródłem wiedzy jest oficjalne repozytorium, które zawiera dokumentację, przykłady oraz zestaw narzędzi i pluginów wspierających różne języki programowania. Dodatkowo, autor narzędzia - Terence Parr - opracował obszerną książkę The Definitive ANTLR 4 Reference, która w przystępny sposób omawia zasady działania parsera, projektowania gramatyk i integracji z kodem użytkownika.
+
+Dużym atutem ANTLR jest aktywnie wspierana społeczność, dziesiątki otwartych repozytoriów z gotowymi gramatykami oraz liczne fora i grupy dyskusyjne, które ułatwiają rozwiązywanie problemów oraz wymianę doświadczeń. Przykłady gramatyk dla wielu języków są dostępne publicznie, co pozwala na szybki start oraz naukę dobrych praktyk.
+
+ANTLR jest również korzystny pod względem prawnym. Narzędzie jest udostępniane na licencji BSD, która jest licencją otwartoźródłową o bardzo liberalnych warunkach. Pozwala ona na swobodne wykorzystanie narzędzia w projektach komercyjnych, jego modyfikację, integrację z zamkniętym oprogramowaniem, a także rozpowszechnianie wygenerowanego kodu bez dodatkowych ograniczeń. Oznacza to pełną zgodność z wymaganiami projektów takich jak CPDev, w których potrzebne są elastyczne i bezpieczne rozwiązania wspierające rozwój oprogramowania przemysłowego.
+
+\subsubsection{Wady i zalety}
+ANTLR v4 to nowoczesne i wszechstronne narzędzie do tworzenia parserów, które łączy wysoką czytelność gramatyki z elastycznym i rozszerzalnym modelem działania. Jego głównymi zaletami są: intuicyjna składnia oparta na formacie EBNF, automatyczne generowanie pełnego drzewa składniowego (CST), obsługa wzorców Visitor i Listener, możliwość łatwej integracji z różnymi językami programowania oraz bardzo dobra dokumentacja i wsparcie społeczności. Narzędzie oferuje również bogate mechanizmy raportowania błędów oraz możliwość tworzenia własnych strategii przetwarzania składni.
+
+Wadą ANTLR może być niższa wydajność w porównaniu do narzędzi opartych na analizatorach LR, szczególnie przy bardzo dużych gramatykach lub kodzie o dużej złożoności. Dla użytkowników oczekujących pełnej automatyzacji tworzenia AST może być też ograniczeniem konieczność samodzielnego budowania uproszczonych struktur drzewa. Niemniej jednak, elastyczność tego rozwiązania pozwala na pełną kontrolę nad procesem analizy składniowej, co z punktu widzenia projektów inżynierskich i badawczych stanowi istotną zaletę.
+
+ANTLR v4 stanowi zatem dojrzałe, dobrze udokumentowane i szeroko stosowane narzędzie, które znakomicie sprawdza się w zastosowaniach wymagających czytelności, rozszerzalności i precyzyjnego sterowania procesem parsowania.
+
+\subsection{Irony.Net}
+\subsection{Bison}
 \subsection{Porównanie}
 \clearpage
 \section{Utworzenie parsera języka ST przy pomocy ANTLRv4}

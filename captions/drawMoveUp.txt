@@ -1,1 +1,0 @@
-Metoda rysuj¹ca strza³kê w górê z opisem na wyœwietlaczu
