@@ -97,7 +97,7 @@ CPDev (Control Program Developer) to otwarte, uniwersalne środowisko inżyniers
 
 Jednym z głównych atutów CPDev jest modularność oraz szeroki zakres funkcjonalności obejmujący cały proces tworzenia aplikacji sterujących. Środowisko udostępnia zestaw edytorów tekstowych i graficznych, narzędzia do konfiguracji systemu, symulator sterownika oraz narzędzia do projektowania interfejsów HMI. Dzięki temu możliwe jest kompleksowe projektowanie i testowanie systemów sterowania bez konieczności stosowania zewnętrznych narzędzi.
 
-Ważną cechą CPDev jest jego niezależność sprzętowa, osiągnięta dzięki zastosowaniu warstwy pośredniej w postaci wirtualnej maszyny, która interpretuje kod pośredni generowany przez kompilator. Takie podejście umożliwia łatwe wdrażanie systemu na różnych urządzeniach, w tym na mikrokontrolerach, procesorach ARM, a nawet na implementacjach FPGA\cite{cpdevFPGA}. Jednocześnie zapewnia ono jednolity sposób działania aplikacji niezależnie od platformy sprzętowej.
+Ważną cechą CPDev-a jest jego niezależność sprzętowa, osiągnięta dzięki zastosowaniu warstwy pośredniej w postaci maszyny wirtualnej, która interpretuje kod pośredni generowany przez kompilator. Takie podejście umożliwia łatwe wdrażanie systemu na różnych urządzeniach, w tym na mikrokontrolerach, procesorach ARM, a nawet na implementacjach FPGA\cite{cpdevFPGA}. Jednocześnie zapewnia ono jednolity sposób działania aplikacji niezależnie od platformy sprzętowej.
 
 Środowisko CPDev jest stale rozwijane i udoskonalane. W kolejnych wersjach wprowadzano m.in. wsparcie dla języków graficznych, rozszerzenia dla systemów wielordzeniowych, interfejsy XML pozwalające na współpracę z innymi narzędziami inżynierskimi oraz rozwiązania umożliwiające projektowanie zgodnie z podejściem MDD (Model-Driven Development). CPDev znalazł już zastosowanie w wielu wdrożeniach przemysłowych — zarówno w kraju, jak i za granicą.
 
@@ -107,7 +107,7 @@ Z punktu widzenia użytkownika, środowisko CPDev oferuje funkcjonalności znane
 Programowanie w środowisku CPDev odbywa się w ramach graficznego interfejsu IDE, które integruje różne etapy projektowania systemu automatyki: od pisania kodu sterującego, przez konfigurację sprzętu i symulację, aż po wdrożenie na urządzenie docelowe \cite{cpdev2009}. Proces ten można podzielić na kilka etapów:
 
 \begin{enumerate}[label=\arabic*), leftmargin=1.25cm]
-    \item Tworzenie projektu - użytkownik definiuje strukturę programu, dodaje nowe jednostki organizacyjne (POUs), deklaruje zmienne globalne i lokalne.
+    \item Tworzenie projektu -- użytkownik definiuje strukturę programu, dodaje nowe jednostki organizacyjne (POUs), deklaruje zmienne globalne i lokalne.
     \item Kodowanie logiki sterowania -- za pomocą jednego lub kilku języków normy IEC 61131-3.
     \item Konfigurację sprzętu i zmiennych wejścia-wyjścia -- z użyciem narzędzia CPCon.
     \item Symulację i testowanie -- możliwą dzięki narzędziu CPSim, które pozwala uruchomić aplikację sterującą w trybie offline.
@@ -115,36 +115,36 @@ Programowanie w środowisku CPDev odbywa się w ramach graficznego interfejsu ID
 \end{enumerate}
 
 \subsubsection{Dostępne języki programowania sterowników}
-CPDev wspiera wszystkie języki określone w normie IEC 61131-3\cite{iec61131-3}, co pozwala użytkownikom wybrać najbardziej pasujący im sposób definiowania logiki sterującej w zależności od specyfiki projektu lub preferencji osobistych. Szczegółowo, obsługiwane przez CPDev języki programowania  to\cite{cpdevLanguages}:
+CPDev wspiera wszystkie języki określone w normie IEC 61131-3\cite{iec61131-3}\cite{cpdevLanguages}, co pozwala użytkownikom wybrać najbardziej pasujący im sposób definiowania logiki sterującej w zależności od specyfiki projektu lub preferencji osobistych. Szczegółowo, obsługiwane przez CPDev języki programowania to:
 
 \begin{enumerate}[label=\alph*), leftmargin=1.25cm]
     \item ST (Structured Text)\\
-    Język ST jest tekstowym językiem wysokiego poziomu, przypominającym składnią Pascala lub języki z rodziny C. Oferuje bogaty zestaw struktur sterujących (pętle, warunki, bloki), obsługę typów prostych i złożonych oraz wyrażeń logicznych i arytmetycznych. CPDev umożliwia pisanie całych aplikacji w ST, a także używanie go do definiowania funkcji i bloków funkcyjnych. Edytor kodu ST w CPDev jest wyposażone w podświetlanie składni, autouzupełnianie i sprawdzanie błędów składniowych na bieżąco, co znacznie ułatwia pracę programisty. Okno edycji z przykładowym kodem ST przedstawiono na rysunku \ref{Fig:startStopST}.
+    Język ST jest tekstowym językiem wysokiego poziomu, przypominającym składnią Pascal i języki z rodziny C. Oferuje bogaty zestaw struktur sterujących (pętle, warunki itp.), obsługę typów prostych i złożonych (strukturalnych i obiektowych) oraz wyrażeń logicznych i arytmetycznych. CPDev umożliwia pisanie całych aplikacji w ST, a także używanie go do definiowania funkcji i bloków funkcyjnych. Edytor kodu ST w CPDev jest wyposażony w podświetlanie składni, autouzupełnianie i sprawdzanie błędów składniowych na bieżąco, co znacznie ułatwia pracę programisty. Okno edycji z przykładowym kodem ST przedstawiono na rysunku \ref{Fig:startStopST}.
 
    \begin{figure}[ht]
    \centering
    \includegraphics[width=12cm]{images/startStopST.png}
-   \caption{Wygląd okna edycji prostego kodu ST w programie CPDev}
+   \caption{Okno edycji prostego kodu ST w programie CPDev}
    \label{Fig:startStopST}
    \end{figure}
 
     \item IL (Instruction List)\\
-    IL to język niskopoziomowy, przypominający asembler. Umożliwia precyzyjne określanie instrukcji operujących na rejestrach i zmiennych. Jego stosowanie w CPDev jest obecnie rzadsze, ponieważ został wycofany z najnowszej wersji normy IEC 61131-3, ale nadal pozostaje dostępny dla kompatybilności. Okno edycji IL w CPDev pozwala na pisanie kodu w formie instrukcji, przedstwiono je wraz z przykładowym kodem na rysunku \ref{Fig:startStopIL}. 
+    IL to język niskopoziomowy, przypominający assembler. Umożliwia precyzyjne określanie instrukcji operujących na rejestrach i zmiennych. Jego stosowanie w CPDev jest obecnie rzadsze, ponieważ został wycofany z najnowszej wersji normy IEC 61131-3, ale nadal pozostaje dostępny dla kompatybilności. Okno edycji IL w CPDev pozwala na pisanie kodu w formie instrukcji, przedstawiono je wraz z przykładowym kodem na rysunku \ref{Fig:startStopIL}. 
 
    \begin{figure}[ht]
    \centering
    \includegraphics[width=13cm]{images/startStopIL.png}
-   \caption{Wygląd okna edycji prostego kodu IL w programie CPDev}
+   \caption{Okno edycji prostego kodu IL w programie CPDev}
    \label{Fig:startStopIL}
    \end{figure}
 
     \item FBD (Function Block Diagram)\\
-    FBD jest językiem graficznym, który pozwala na tworzenie logiki poprzez łączenie bloków funkcyjnych w sposób przypominający schematy blokowe. Jest chętnie wykorzystywany przez inżynierów o mniejszym doświadczeniu programistycznym, szczególnie w przemyśle. W CPDev edytor FBD umożliwia tworzenie diagramów blokowych, gdzie każdy blok reprezentuje funkcję lub operację, a połączenia między nimi definiują przepływ danych. Bloki mogą być konfigurowane i łączone w sposób graficzny, co ułatwia zrozumienie logiki sterowania. Przykładowe okno edycji FBD z prostym kodem przedstawiono na rysunku \ref{Fig:startStopFBD}.
+    FBD jest językiem graficznym, który pozwala na tworzenie logiki poprzez łączenie bloków funkcjonalnych w sposób przypominający schematy blokowe. Jest chętnie wykorzystywany przez inżynierów o mniejszym doświadczeniu programistycznym, szczególnie w przemyśle. W CPDev edytor FBD umożliwia tworzenie diagramów blokowych, gdzie każdy blok reprezentuje funkcję lub operację, a~połączenia między nimi definiują przepływ danych. Bloki mogą być konfigurowane i łączone w sposób graficzny, co ułatwia zrozumienie logiki sterowania. Przykładowe okno edycji FBD z prostym kodem przedstawiono na rysunku \ref{Fig:startStopFBD}.
 
    \begin{figure}[ht]
    \centering
    \includegraphics[width=14cm]{images/startStopFBD.png}
-   \caption{Wygląd okna edycji prostego kodu FBD w programie CPDev}
+   \caption{Okno edycji prostego kodu FBD w programie CPDev}
    \label{Fig:startStopFBD}
    \end{figure}
 
@@ -154,7 +154,7 @@ CPDev wspiera wszystkie języki określone w normie IEC 61131-3\cite{iec61131-3}
    \begin{figure}[ht]
    \centering
    \includegraphics[width=12cm]{images/startStopLD.png}
-   \caption{Wygląd okna edycji prostego kodu LD w programie CPDev}
+   \caption{Okno edycji prostego kodu LD w programie CPDev}
    \label{Fig:startStopLD}
    \end{figure}
 
@@ -164,7 +164,7 @@ CPDev wspiera wszystkie języki określone w normie IEC 61131-3\cite{iec61131-3}
    \begin{figure}[ht]
    \centering
    \includegraphics[width=12cm]{images/tanksSFC.png}
-   \caption{Wygląd okna edycji prostego kodu SFC w programie CPDev}
+   \caption{Okno edycji prostego kodu SFC w programie CPDev}
    \label{Fig:tanksSFC}
    \end{figure}
 \end{enumerate}
@@ -173,9 +173,9 @@ CPDev wspiera wszystkie języki określone w normie IEC 61131-3\cite{iec61131-3}
 
 Implementacja środowiska CPDev została oparta na założeniu, że system sterowania powinien być niezależny od konkretnej platformy sprzętowej, a zarazem możliwy do wdrożenia w rzeczywistych aplikacjach przemysłowych. Aby to osiągnąć, architektura CPDev została podzielona na dwa główne poziomy: środowisko deweloperskie (IDE) oraz maszynę wirtualną (VM), która wykonuje wygenerowany program sterujący.
 
-Środowisko deweloperskie CPDev zostało zaimplementowane w języku C\# na platformę .NET, przez co aplikacja posiada nowoczesny interfejs graficzny, wygodę użytkowania i łatwość dalszej rozbudowy. Składa się z modularnych komponentów, takich jak edytory kodu źródłowego, narzędzia konfiguracyjne, symulatory, analizatory błędów i generator kodu pośredniego \cite{cpdevOverview}. Zastosowanie C\# i środowiska .NET pozwala na integrację z innymi narzędziami, obsługę graficznych języków programowania oraz wprowadzanie rozwiązań typowych dla nowoczesnych aplikacji okienkowych (GUI).
+Środowisko deweloperskie CPDev zostało zaimplementowane w języku C\# na platformę .NET, przez co aplikacja posiada nowoczesny interfejs graficzny, zapewnia wygodę użytkowania i łatwość dalszej rozbudowy. Składa się z modularnych komponentów, takich jak edytory kodu źródłowego, narzędzia konfiguracyjne, symulatory, analizatory błędów i generator kodu pośredniego \cite{cpdevOverview}. Zastosowanie C\# i środowiska .NET pozwala na integrację z innymi narzędziami, obsługę graficznych języków programowania oraz wprowadzanie rozwiązań typowych dla nowoczesnych aplikacji okienkowych (GUI).
 
-Kluczowym elementem działania środowiska jest kompilator, który tłumaczy kod źródłowy napisany w językach normy IEC 61131-3 (głównie ST) do VMASM - pośredniego kodu niskiego poziomu wykonywanego przez maszynę wirtualną. Maszyna wirtualna CPDev-a to lekki, niezależny od sprzętu interpreter kodu VMASM, implementowany głównie w języku ANSI C, co zapewnia wysoką przenośność. Dzięki temu może ona działać na wielu różnych platformach sprzętowych, w tym na mikrokontrolerach (np. AVR, ARM), systemach wbudowanych (np. Raspberry Pi, STM32), a także w symulacji na komputerze PC\cite{cpdevVM}.
+Jednym z najważniejszych elementów tego środowiska jest kompilator, który tłumaczy kod źródłowy napisany w językach normy IEC 61131-3 (głównie ST, gdyż inne języki są na niego tłumaczone) do VMASM, czyli pośredniego kodu niskiego poziomu wykonywanego przez maszynę wirtualną. Maszyna wirtualna CPDev-a to lekki, niezależny od sprzętu interpreter kodu VMASM, implementowany głównie w języku ANSI C, co zapewnia wysoką przenośność. Dzięki temu może ona działać na wielu różnych platformach sprzętowych, w tym na mikrokontrolerach (np. AVR, ARM), systemach wbudowanych (np. Raspberry Pi, STM32), a także w symulacji na komputerze PC\cite{cpdevVM}.
 
 \begin{figure}[ht]
    \centering
@@ -188,15 +188,22 @@ Kluczowym elementem działania środowiska jest kompilator, który tłumaczy kod
 
 \section{Drzewa składniowe na podstawie gramatyk bezkontekstowych}
 \subsection{Wprowadzenie do gramatyk bezkontekstowych}
-Gramatyka bezkontekstowa (CFG, Context-Free Grammar) to matematyczny model służący do opisu struktury formalnych języków, takich jak języki programowania. Składa się z: skończonego zbioru symboli nieterminalnych (zmiennych), zbioru symboli terminalnych (symboli końcowych, np. słów kluczowych, operatorów), zestawu produkcyjnych reguł, w których każdy symbol nieteminalny może być zastąpiony ciągiem terminali i/lub nieterminali, specjalnego symbolu startowego. Najważniejszą ich cechą jest to, że zachowują swoje znaczenie niezależnie od kontekstu czyli otoczenia w którym znajduje się symbol. Gramatyki bezkontekstowe są wystarczająco wyraźne, by opisać większość języków programowania, ale jednocześnie na tyle proste, by dawać się wydajnie parsować algorytmicznie.\cite{contextFreeGrammar}
+Gramatyki bezkontekstowe (CFG, Context-Free Grammar) to matematyczny model służący do opisu struktury formalnych języków, takich jak języki programowania. Składają się one z:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+   \item skończonego zbioru symboli nieterminalnych (zmiennych),
+   \item zbioru symboli terminalnych (symboli końcowych, np. słów kluczowych, operatorów),
+   \item zestawu produkcyjnych reguł, w których każdy symbol nieteminalny może być zastąpiony ciągiem terminali oraz nieterminali, 
+   \item specjalnego symbolu startowego.
+\end{itemize} 
+Najważniejszą ich cechą jest to, że zachowują swoje znaczenie niezależnie od kontekstu czyli otoczenia, w którym znajduje się symbol. Gramatyki bezkontekstowe są wystarczająco złożone, by opisać większość języków programowania, ale jednocześnie na tyle proste, by dawać się wydajnie parsować algorytmicznie.\cite{contextFreeGrammar}
 
 \subsection{Wyprowadzenia i formy zdaniowe}
-Proces generowania ciągu terminali rozpoczyna się od symbolu startowego i polega na wielokrotnym zastępowaniu nieterminali zgodnie z regułami gramatyki rozwijając kolejno każdy symbol nieterminalny\cite{contextFreeGrammar}. Taki proces to wyprowadzanie, często opisywany za pomocą kroków typu lewostronnego lub prawostronnego. W każdym etapie generowania teminali powstają tzw. formy zdaniowe, czyli częściowo przetworzone ciągi symboli.
+Proces generowania ciągu terminali rozpoczyna się od symbolu startowego i~polega na wielokrotnym zastępowaniu nieterminali zgodnie z regułami gramatyki rozwijając kolejno każdy symbol nieterminalny\cite{contextFreeGrammar}. Taki proces to wyprowadzanie, często opisywany za pomocą kroków typu lewostronnego lub prawostronnego. W każdym etapie generowania terminali powstają tzw. formy zdaniowe, czyli częściowo przetworzone ciągi symboli.
 
 \subsection{Drzewa składniowe}
-Drzewo składniowe to uporządkowana struktura w postaci drzewa, która wizualnie i strukturalnie odwzorowuje sposób, w jaki ciąg symboli terminalnych (np. kod programu) został wygenerowany przez gramatykę. Korzeń drzewa to symbol startowy, a każdy węzeł wewnętrzny reprezentuje symbol nieterminalny, który został rozwinięty na swoje dzieci (symboli terminalnych lub innych nieterminali). Z kolei liście drzewa odpowiadają symbolom terminalnym, które są końcowymi elementami wygenerowanego ciągu.
+Drzewo składniowe to uporządkowana struktura w postaci drzewa, która wizualnie i strukturalnie odwzorowuje sposób, w jaki ciąg symboli terminalnych (np. kod programu) został wygenerowany przez gramatykę. Korzeń drzewa to symbol startowy, a każdy węzeł wewnętrzny reprezentuje symbol nieterminalny, który został rozwinięty na swoje dzieci (symbole terminalne lub inne nieterminale). Z kolei liście drzewa odpowiadają symbolom terminalnym, które są końcowymi elementami wygenerowanego ciągu.
 
-Drzewo składniowe powstaje podczas parsowania: każda reguła produkcji zamienia symbol nieterminalny na jego dzieci w drzewie. Korzystając z kolejności liści od lewej lub prawej, odczytujemy oryginalny ciąg słów, czyli kod źródłowy. Poniżej na rysunku \ref{Fig:simpleGrammarTree} przedstawiono przykład drzewa składniowego dla prostego wyrażenia arytmetycznego \textit{7 + 2 * 3} z zastosowaniem zasad znanych z matematyki, gdzie mnożenie ma wyższy priorytet niż dodawanie.
+Drzewo składniowe powstaje podczas procesu parsowania kodu: każda reguła produkcyjna zamienia symbol nieterminalny na jego dzieci w~drzewie. Korzystając z~kolejności liści od lewej lub prawej, odczytać można oryginalny ciąg słów, czyli w~przypadku zastosowania dla CPDev: kod źródłowy. Poniżej na rysunku \ref{Fig:simpleGrammarTree} przedstawiono przykład drzewa składniowego dla prostego wyrażenia arytmetycznego \textit{7 + 2 * 3} z~zastosowaniem zasad znanych z~matematyki, gdzie mnożenie ma wyższy priorytet niż dodawanie.
 
 \begin{figure}[ht]
    \centering
@@ -205,54 +212,55 @@ Drzewo składniowe powstaje podczas parsowania: każda reguła produkcji zamieni
    \label{Fig:simpleGrammarTree}
 \end{figure}
 
-
 Drzewa składniowe mogą służyć jako:
 \begin{itemize}[label=\textbullet, leftmargin=1.25cm]
-   \item reprezentacja struktury kodu źródłowego, na przejrzystym drzewie,
+   \item reprezentacja struktury kodu źródłowego, na przejrzystym diagramie pokazującym hierarchię i zależności między elementami,
    \item podstawa do analiz semantycznych, takich jak sprawdzanie typów czy wykrywanie błędów,
-   \item model do generacji kodu pośredniego lub docelowego wykorzystywany kompilatorach i interpreterach.
+   \item model na którego podstawie zostanie wygerenowany kod pośredni lub docelowy wykorzystywany w kompilatorach i interpreterach.\\\\
 \end{itemize}
 
 \subsection{Zastosowanie parserów w IDE}
-W zintegrowanych środowiskach programistycznych drzewa składniowe umożliwiają kolorowanie składni, dynamiczne podpowiedzi, sprawdzanie błędów składniowych, a także refaktoryzację kodu. Dla CPDev-a z uwagi na to, że korzysta on z translatora kodu źródłowego, drzewo składniowe kodu języka ST jest niezbędne do poprawnej analizy i interpretacji kodu. Automatyczna generacja drzewa składniowego na podstawie pliku gramatyki pozwoliłaby na ujednolicenie procesu tworzenia parsera, co jest niezwykle istotne dla rozwoju środowiska CPDev. Dzięki temu możliwe byłoby łatwiejsze wprowadzanie zmian w gramatyce języka ST oraz szybsze dostosowywanie parsera do nowych wymagań.
+W zintegrowanych środowiskach programistycznych drzewa składniowe są podstawą kolorowania składni, dynamicznych podpowiedzi, sprawdzanie błędów składniowych, a także automatycznej refaktoryzacji kodu. Dla CPDev-a z uwagi na to, że korzysta on z translatora kodu źródłowego, drzewo składniowe kodu języka ST jest niezbędne do poprawnej analizy i interpretacji kodu. Automatyczna generacja drzewa składniowego na podstawie pliku gramatyki pozwoliłaby na ujednolicenie procesu tworzenia parsera, co jest niezwykle istotne dla rozwoju środowiska CPDev. Dzięki temu możliwe byłoby łatwiejsze wprowadzanie zmian w gramatyce języka ST oraz szybsze dostosowywanie parsera do nowych wymagań.
 \clearpage
 
 \section{Przegląd narzędzi do tworzenia parserów automatycznie generujących drzewa składniowe}
 
-W kontekście niniejszej pracy parser składniowy posłuży do analizy języka Structured Text (ST), który jest jednym z pięciu języków programowania określonych w normie IEC 61131-3, używanych do programowania sterowników PLC. Parser ten zostanie zastosowany w ramach oprogramowania CPDev. Celem jest wygenerowanie drzewa składniowego programu ST, które może zostać następnie wykorzystane do dalszych analiz semantycznych, optymalizacji lub transformacji kodu źródłowego.
+W niniejszej pracy parser składniowy posłuży do analizy utworzenia drzewa składniowego języka Structured Text (ST), który jest jednym z pięciu języków programowania określonych w normie IEC 61131-3, używanych do programowania sterowników PLC. Parser ten zostanie zastosowany w ramach oprogramowania CPDev. Celem jest wygenerowanie drzewa składniowego programu ST, które może zostać następnie wykorzystane do dalszych analiz semantycznych, optymalizacji lub transformacji kodu źródłowego.
 
-Z uwagi na specyfikę CPDev  pisanego w języku C\# i bazującego na strukturach .NET  istotne jest, aby wybrane narzędzie do generowania parserów było kompatybilne z tą platformą, a także zapewniało czytelność, rozszerzalność i dobrą integrację z pozostałymi komponentami systemu. W dalszej części tego rozdziału przeprowadzona zostanie analiza wybranych narzędzi do towrzenia parserów automatycznie generujących drzewa składniowe pod kątem ich funkcjonalności, wydajności, wsparcia dla języka C\# oraz możliwości integracji z systemem CPDev. Na tej podstawie zostanie dokonany wybór najlepszego rozwiązania.
+Z uwagi na specyfikę CPDev-a utworzonego w języku C\# i bazującego na strukturach .NET istotne jest, aby wybrane narzędzie do generowania parserów było kompatybilne z tą platformą, a także zapewniało czytelność, rozszerzalność i dobrą integrację z pozostałymi komponentami systemu. W dalszej części tego rozdziału przeprowadzona zostanie analiza wybranych narzędzi do tworzenia parserów automatycznie generujących drzewa składniowe pod kątem ich funkcjonalności, wydajności, wsparcia dla języka C\# oraz możliwości integracji z systemem CPDev. Na tej podstawie zostanie dokonany wybór najlepszego rozwiązania.
 \subsection{ANTLRv4}
 
-ANTLR (ANother Tool for Language Recognition) to generator parserów opracowany przez Terence'a Parra i jego zespół. Jego najnowsza wersja czyli ANTLR v4 została wydana w sierpniu 2024 roku i jest objęta licencją BSD3. Narzędzie to stanowi kulminację ponad 25 lat badań nad technikami parsowania języków formalnych. ANTLR4 wpiera aż 10 jezyków docelowych w których może zostać utworzony parser i są to: C++, C\#, Dart, Java, JavaScript, PHP, Python3, Swift, TypeScript oraz Go.\cite{antlr4GitHub} ANTLR v4 jest wykorzystywany w projektach akademickich i przemysłowych takich jak m.in. Twitter (zapytania), Hive i Pig w Hadoop, narzędzia Oracle (SQL Developer), Hibernate, NetBeans, Presto czy MySQL Workbench.\cite{antlr4Org}
+ANTLR (ANother Tool for Language Recognition) to generator parserów opracowany przez Terence'a Parra i jego zespół. Jego najnowsza wersja czyli ANTLRv4 została wydana w sierpniu 2024 roku i jest objęta licencją BSD3. Narzędzie to stanowi kulminację ponad 25 lat badań nad technikami parsowania języków formalnych. 
+
+ANTLRv4 wpiera aż 10 jezyków docelowych\cite{antlr4GitHub}, w których może zostać utworzony parser i są to: C++, C\#, Dart, Java, JavaScript, PHP, Python3, Swift, TypeScript oraz Go. Wykorzystywany jest w projektach akademickich i przemysłowych takich jak m.in. Twitter (zapytania), Hive i Pig w Hadoop, narzędzia Oracle (SQL Developer), Hibernate, NetBeans, Presto czy MySQL Workbench.\cite{antlr4Org}
 
 \subsubsection{Typ gramatyki i parsera}
-ANTLRv4 w utworzonym pareserze wykorzystuje algorytm Adaptive LL(*), często skracany jako ALL(*), będący znaczącym ulepszeniem względem klasycznych parserów LL(k) i wcześniejszej wersji ANTLRv3. W przeciwieństwie do statycznego LL(), ALL() dokonuje analizy lookahead dynamicznie podczas działania parsera, co pozwala na obsłużenie bardziej złożonych oraz naturalnych gramatyk bez konieczności ręcznej transformacji reguł.\cite{antlr4GitHub} Eliminuje też konieczność backtrackingu, typową dla wcześniejszych wersji ANTLR w sytuacjach niejednoznacznych\cite{Antlr4Optimisation}. Poniżej na listingu \ref{Lst:antlrv4SimpleGrammar} przedstawiono przykładową prostą gramatykę dla ANTLRv4 gdzie można zauważyć, że nie było wymagane wykonywanie skomplikowanej struktury zagnieżdzonej znanej z parserów typu top-down\cite{antlr4Book}, którym w istocie jest parser generowany przez to narzędzie.
+ANTLRv4 w utworzonym parserze wykorzystuje algorytm Adaptive LL(*), często skracany jako ALL(*), będący znaczącym ulepszeniem względem klasycznych parserów LL(k) i wcześniejszej wersji ANTLRv3. W przeciwieństwie do statycznego LL(), ALL() dokonuje analizy lookahead dynamicznie podczas działania parsera, co pozwala na obsłużenie bardziej złożonych oraz naturalnych gramatyk bez konieczności ręcznej transformacji reguł.\cite{antlr4GitHub} Eliminuje też konieczność backtrackingu, typową dla wcześniejszych wersji ANTLR w sytuacjach niejednoznacznych\cite{Antlr4Optimisation}. Poniżej na listingu \ref{Lst:antlrv4SimpleGrammar} przedstawiono przykładową prostą gramatykę dla ANTLRv4 gdzie można zauważyć, że nie było wymagane wykonywanie skomplikowanej struktury zagnieżdzonej znanej z~parserów typu top-down\cite{antlr4Book}, którym w istocie jest parser generowany przez to narzędzie.
 
 \lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/antlrv4SimpleGrammar.txt}\protect\relax}, label={Lst:antlrv4SimpleGrammar}]{codes/antlrv4SimpleGrammar.txt}
 
-ANTLRv4 umożliwia definiowanie reguł z rekurencją lewą np. \kod{expr: expr '+' expr;} co wcześniej było niemożliwe i sprawiało trudności w parserach typu top-down. Reguły te są automatycznie przekształcane przez ANTLR na odpowiedniki bez rekurencji przez wbudowane mechanizmy przepisujące gramatykę, zachowując przy tym prawidłową kolejność operatorów i skojarzenia. Jednak ANTLR obsługuje wyłącznie bezpośrednią rekurencję lewą i nie wspiera rekurencji pośredniej (czyli wzajemnej między różnymi regułami).
+ANTLRv4 umożliwia definiowanie reguł z rekurencją lewą np. \kod{expr: expr '+' expr;} co wcześniej było niemożliwe i sprawiało trudności w parserach typu top-down. Reguły te są automatycznie przekształcane przez ANTLR na odpowiedniki bez rekurencji przez wbudowane mechanizmy przepisujące gramatykę, zachowując przy tym prawidłową kolejność operatorów i skojarzenia. Jednak ANTLR obsługuje wyłącznie bezpośrednią rekurencję lewą i nie wspiera rekurencji pośredniej (czyli wzajemnej między różnymi regułami parsera).
 
 \subsubsection{Ogólny proces generowania parsera}
-Proces tworzenia parsera za pomocą ANTLR v4 składa się z kilku nieskomplikowanych kroków, które umożliwiają automatyczne wygenerowanie analizatora składniowego na podstawie formalnej gramatyki języka:
+Proces tworzenia parsera za pomocą ANTLRv4 składa się z kilku nieskomplikowanych dla użytkownika kroków, które umożliwiają automatyczne wygenerowanie analizatora składniowego na podstawie formalnej gramatyki języka:
 
 \begin{enumerate}[label=\arabic*., leftmargin=1.25cm]
 \item 
-Zdefiniowanie gramatyki - Pierwszym krokiem jest utworzenie pliku z rozszerzeniem .g4, w którym zapisuje się reguły gramatyki w notacji zbliżonej do EBNF. Gramatyka zawiera definicje tokenów (reguły leksykalne) oraz struktur językowych (reguły parsera).
-\item Uruchomienie generatora - Korzystając z narzędzia antlr4 (np. z wiersza poleceń), generuje się zestaw klas parsera i leksera w wybranym języku programowania (np. C\#, Java, Python). Na przykład dla języka C\#: \kod{java -jar antlr-4.X-complete.jar -Dlanguage=CSharp Expr.g4}
-\item Integracja z aplikacją - Wygenerowane klasy mogą zostać dołączone do projektu w wybranym środowisku programistycznym. Z parsera można korzystać poprzez utworzenie instancji klasy leksera i parsera, a następnie przekazanie do nich kodu źródłowego jako tekstu.
-\item Obsługa wynikowego drzewa składniowego - ANTLR umożliwia automatyczne przetwarzanie wygenerowanego drzewa składniowego przy pomocy wzorców Visitor lub Listener, co pozwala na dalszą analizę, interpretację lub transformację kodu.
-
-\item Obsługa błędów i debugowanie - Parser domyślnie obsługuje wykrywanie i raportowanie błędów składniowych, a użytkownik może nadpisać domyślne zachowanie (np. logowanie, zatrzymanie parsowania lub odzyskiwanie po błędach).
+Zdefiniowanie gramatyki -- Pierwszym krokiem jest utworzenie pliku z rozszerzeniem \kod{.g4}, w którym zapisuje się reguły gramatyki w notacji zbliżonej do EBNF. Gramatyka zawiera definicje tokenów (reguły leksykalne) oraz struktur językowych (reguły parsera).
+\item Uruchomienie generatora -- Korzystając z narzędzia antlr4 (np. z wiersza poleceń), generuje się zestaw klas parsera i leksera w wybranym języku programowania (np. C\#, Java, Python). Na przykład dla języka C\#:\\
+ \kod{java -jar antlr-4.X-complete.jar -Dlanguage=CSharp Expr.g4}
+\item Integracja z aplikacją -- Wygenerowane klasy mogą zostać dołączone do projektu w wybranym środowisku programistycznym. Z parsera można korzystać poprzez utworzenie instancji klasy leksera i parsera, a następnie przekazanie do nich kodu źródłowego jako tekstu.
+\item Obsługa wynikowego drzewa składniowego -- ANTLR umożliwia automatyczne przetwarzanie wygenerowanego drzewa składniowego przy pomocy wzorców Visitor lub Listener.
+\item Obsługa błędów i debugowanie -- Parser domyślnie obsługuje wykrywanie i raportowanie błędów składniowych, a dodatkowo użytkownik może nadpisać domyślne zachowanie narzędzia w przypadku wykrycia błędu(np. logowanie, zatrzymanie parsowania lub odzyskiwanie po błędach).
 \end{enumerate}
 
-Dzięki oddzieleniu gramatyki od logiki aplikacji i wsparciu wielu języków programowania, ANTLR v4 umożliwia łatwe i szybkie tworzenie parserów z pełnym drzewem składniowym gotowym do dalszego przetwarzania.
+Dzięki oddzieleniu gramatyki od logiki aplikacji i wsparciu wielu języków programowania, ANTLRv4 umożliwia łatwe i szybkie tworzenie parserów z pełnym drzewem składniowym gotowym do dalszego przetwarzania.
 
 \subsubsection{Tworzenie gramatyki}
 Gramatyka w ANTLR v4 zapisywana jest w plikach z rozszerzeniem \kod{.g4} i definiowana w notacji zbliżonej do EBNF (Extended Backus-Naur Form). Plik gramatyki zawiera dwie główne sekcje:
 \begin{itemize}[label=\textbullet, leftmargin=1.25cm]
-   \item Reguły parsera - definiują strukturę języka, czyli jak poszczególne elementy (np. wyrażenia, instrukcje) są zbudowane z tokenów. Nazwy reguł zaczynają się małą literą.
-   \item Reguły leksykalne - definiują tokeny, czyli podstawowe elementy składniowe (np. liczby, słowa kluczowe, operatory). Nazwy reguł zaczynają się wielką literą.
+   \item Reguły parsera -- definiują strukturę języka, czyli jak poszczególne elementy (np. wyrażenia, instrukcje) są zbudowane z tokenów. Nazwy reguł zaczynają się małą literą.
+   \item Reguły leksykalne -- definiują tokeny, czyli podstawowe elementy składniowe (np. liczby, słowa kluczowe, operatory). Nazwy reguł zaczynają się wielką literą.
 \end{itemize}
 Aby zobrazować sposób tworzenia gramatyki w ANTLR v4, poniżej na listingu  \ref{Lst:antlrv4BiggerGrammar}  przedstawiono prostą gramatykę dla wyrażeń arytmetycznych i przypisań. Na początku definiowana jest w niej reguła startowa \kod{program}, która określa, że analizowany tekst składa się z wielu instrukcji zakończonych końcem pliku. Następnie wprowadzone są reguły odpowiadające różnym typom instrukcji, takim jak przypisania i instrukcje warunkowe. Dalej znajduje się reguła \kod{expr}, która opisuje strukturę wyrażeń arytmetycznych i odniesień do zmiennych.
 
@@ -261,11 +269,18 @@ W drugiej części gramatyki znajdują się reguły leksykalne. Określają one 
 \lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/antlrv4BiggerGrammar.txt}\protect\relax}, label={Lst:antlrv4BiggerGrammar}]{codes/antlrv4BiggerGrammar.txt}
 
 \subsubsection{Analiza drzewa składniowego}
-ANTLR v4 automatycznie generuje pełne drzewo składniowe (Concrete Syntax Tree, CST) na podstawie zdefiniowanej gramatyki. Drzewo to reprezentuje dokładną strukturę analizowanego kodu źródłowego i może być wykorzystane do dalszego przetwarzania na różne sposoby.
+ANTLRv4 automatycznie generuje pełne drzewo składniowe (Concrete Syntax Tree, CST) na podstawie zdefiniowanej gramatyki. Drzewo to reprezentuje dokładną strukturę analizowanego kodu źródłowego i może być wykorzystane do dalszego przetwarzania na różne sposoby. Na grafice poniżej przedstawiono przykładowe drzewo składniowe wygenerowane przez ANTLRv4 dla prostego kodu ST, który przypisuje wartość do zmiennej i wykonuje operację arytmetyczną, a także korzysta w wyrażenia warunkowego. Widać w nim strukturę hierarchiczną, gdzie każdy węzeł reprezentuje regułę gramatyczną lub token.
+
+\begin{figure}[ht]
+   \centering
+   \includegraphics[width=15cm]{images/biggerTreeSimple.png}
+   \caption{Drzewo składniowe dla prostego kod ST wcześniej opisanej prostej gramatyki}
+   \label{Fig:biggerGrammarTree}
+\end{figure}
 
 Jednym z najczęściej stosowanych podejść jest wzorzec \kod{Visitor}, który pozwala na kontrolowane przechodzenie po węzłach drzewa i wykonywanie operacji zależnych od typu konstrukcji składniowej. Wzorzec ten doskonale sprawdza się przy analizie semantycznej, generowaniu kodu lub przekształceniach drzewa. Alternatywnie, ANTLR udostępnia również mechanizm \kod{Listenera}, który umożliwia reagowanie na wejście i wyjście z każdego węzła reguły gramatycznej w kolejności predefiniowanej przez parser. Listener sprawdza się m.in. przy prostym zbieraniu informacji lub pasywnym śledzeniu struktury kodu.
 
-W praktyce często zachodzi potrzeba uproszczenia struktury drzewa składniowego poprzez konwersję CST do własnej reprezentacji AST (Abstract Syntax Tree). ANTLR tego nie generuje automatycznie, ale umożliwia łatwe ręczne budowanie AST podczas odwiedzania węzłów drzewa — np. przez klasy Visitor.
+W praktyce często zachodzi potrzeba uproszczenia struktury drzewa składniowego poprzez konwersję CST do własnej reprezentacji AST (Abstract Syntax Tree). ANTLR nie robi tego automatycznie, ale umożliwia łatwe ręczne budowanie AST podczas odwiedzania węzłów drzewa — np. przez klasy Visitor.
 
 Dodatkowo ANTLR wspiera narzędzia wizualne, takie jak ANTLR Tool czy ANTLRWorks, które pozwalają graficznie przeglądać drzewa składniowe i śledzić przebieg analizy. Ułatwia to zarówno testowanie parsera, jak i debugowanie trudnych przypadków związanych z niejednoznacznością lub błędami składniowymi.
 
