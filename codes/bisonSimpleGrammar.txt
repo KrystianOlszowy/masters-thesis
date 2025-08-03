@@ -1,0 +1,46 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+
+int yylex();
+void yyerror(const char *s);
+%}
+
+%union {
+    int ival;
+}
+
+%token <ival> NUM
+%token PLUS MINUS MUL DIV LPAREN RPAREN
+%type <ival> expr
+
+%left PLUS MINUS
+%left MUL DIV
+
+%%
+
+input:
+    expr              { printf("= %d\n", $1); }
+  ;
+
+expr:
+    expr PLUS expr    { $$ = $1 + $3; }
+  | expr MINUS expr   { $$ = $1 - $3; }
+  | expr MUL expr     { $$ = $1 * $3; }
+  | expr DIV expr     { 
+                          if ($3 == 0) {
+                              yyerror("dzielenie przez zero");
+                              $$ = 0;
+                          } else {
+                              $$ = $1 / $3;
+                          }
+                      }
+  | LPAREN expr RPAREN { $$ = $2; }
+  | NUM               { $$ = $1; }
+  ;
+
+%%
+
+void yyerror(const char *s) {
+    fprintf(stderr, "Blad skladni: %s\n", s);
+}

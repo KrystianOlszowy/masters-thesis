@@ -1,0 +1,1 @@
+Prosty plik lexera dla wyra¿eñ arytmetycznych przygotowany dla narzêdzia Flex 

@@ -81,7 +81,7 @@ Rozdział trzeci zawiera przedstawienie i opis technologii wykorzystanych w zapr
 
 Czwarty rozdział opisuje sposób połączenia komponentów składających się na urządzenie pośredniczące zbudowane aby skomunikować aplikację mobilną z telewizorem. Zawarte zostały w nim także opisane scharakteryzowane parametry tych komponentów.
 
-W rozdziale piątym szczegółowo omówiono utworzone oprogramowanie mikrokontrolera odpowiedzialne za sterowanie jego zasobami i dołączonymi modułami fizyczymi. Przedstawione zostały ważniejsze kody źródłowe projektu oraz ich działanie.
+W rozdziale piątym szczegółowo omówiono utworzone oprogramowanie mikrokontrolera odpowiedzialne za sterowanie jego zasobami i dołączonymi modułami fizycznymi. Przedstawione zostały ważniejsze kody źródłowe projektu oraz ich działanie.
 
 Rozdział szósty zawiera opis zaprojektowanego intefejsu użytkownika aplikacji mobilnej oraz jej funkcjonalności. Ukazane zostały także wykorzystane podczas implementacji, rozwiązania programowe.
 
@@ -235,7 +235,7 @@ ANTLR (ANother Tool for Language Recognition) to generator parserów opracowany 
 ANTLRv4 wpiera aż 10 jezyków docelowych\cite{antlr4GitHub}, w których może zostać utworzony parser i są to: C++, C\#, Dart, Java, JavaScript, PHP, Python3, Swift, TypeScript oraz Go. Wykorzystywany jest w projektach akademickich i przemysłowych takich jak m.in. Twitter (zapytania), Hive i Pig w Hadoop, narzędzia Oracle (SQL Developer), Hibernate, NetBeans, Presto czy MySQL Workbench.\cite{antlr4Org}
 
 \subsubsection{Typ gramatyki i parsera}
-ANTLRv4 w utworzonym parserze wykorzystuje algorytm Adaptive LL(*), często skracany jako ALL(*), będący znaczącym ulepszeniem względem klasycznych parserów LL(k) i wcześniejszej wersji ANTLRv3. W przeciwieństwie do statycznego LL(), ALL() dokonuje analizy lookahead dynamicznie podczas działania parsera, co pozwala na obsłużenie bardziej złożonych oraz naturalnych gramatyk bez konieczności ręcznej transformacji reguł.\cite{antlr4GitHub} Eliminuje też konieczność backtrackingu, typową dla wcześniejszych wersji ANTLR w sytuacjach niejednoznacznych\cite{Antlr4Optimisation}. Poniżej na listingu \ref{Lst:antlrv4SimpleGrammar} przedstawiono przykładową prostą gramatykę dla ANTLRv4 gdzie można zauważyć, że nie było wymagane wykonywanie skomplikowanej struktury zagnieżdzonej znanej z~parserów typu top-down\cite{antlr4Book}, którym w istocie jest parser generowany przez to narzędzie.
+ANTLRv4 w utworzonym parserze wykorzystuje algorytm Adaptive LL(*), często skracany jako ALL(*), będący znaczącym ulepszeniem względem klasycznych parserów LL(k) i wcześniejszej wersji ANTLRv3. W przeciwieństwie do statycznego LL(), ALL() dokonuje analizy lookahead dynamicznie podczas działania parsera, co pozwala na obsłużenie bardziej złożonych oraz naturalnych gramatyk bez konieczności ręcznej transformacji reguł.\cite{antlr4GitHub} Eliminuje też konieczność backtrackingu, typową dla wcześniejszych wersji ANTLR w sytuacjach niejednoznacznych\cite{Antlr4Optimisation}. Poniżej na listingu \ref{Lst:antlrv4SimpleGrammar} przedstawiono przykładową prostą gramatykę dla ANTLRv4 gdzie można zauważyć, że nie było wymagane wykonywanie skomplikowanej struktury zagnieżdżonej znanej z~parserów typu top-down\cite{antlr4Book}, którym w istocie jest parser generowany przez to narzędzie.
 
 \lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/antlrv4SimpleGrammar.txt}\protect\relax}, label={Lst:antlrv4SimpleGrammar}]{codes/antlrv4SimpleGrammar.txt}
 
@@ -328,8 +328,175 @@ Jednak ANTLRv4 ma również pewne wady i ograniczenia, które warto wziąć pod 
 \end{itemize}
 
 \subsection{Bison}
-\subsection{Irony.NET albo Lark albo PEG}
+
+\subsubsection{Historia i przeznaczenie narzędzia}
+Bison(element projektu GNU) jest narzędziem do generowania parserów, które powstało jako alternatywa, rozwinięcie i ulepszenie Yacc (Yet Another Compiler Compiler). Historia Bisona sięga lat 80. XX wieku, kiedy to został stworzony przez Roberta Corbett'a, który jest jego głównym autorem, jako otwartoźródłowa i darmowa (licencja GNU PLC) alternatywa dla komercyjnych narzędzi do generowania parserów, którym był Yacc firmy AT\&T. Bison stał się szybko popularny wśród programistów systemów Unixowych i stał się standardowym narzędziem w ekosystemie GNU.
+
+Bison jest narzędziem przeznaczonym głównie do generowania parserów dla języków programowania oraz innych złożonych formatów tekstowych. Znajduje zastosowanie w kompilatorach, interpreterach, narzędziach do analizy statycznej kodu, a~także w edytorach tekstu i IDE. Bison jest często używany w połączeniu z Flex'em (Fast Lexical Analyzer), który służy do analizy leksykalnej i tokenizacji tekstu źródłowego, ponieważ sam Bison nie wykonuje analizy leksykalnej. Narzędzie to wspiera C, C++, D oraz Java (wersja eksperymentalna) jako języki, w których wygenerowany parser może zostać użyty.\cite{biosonOrg}
+\subsubsection{Typ gramatyki i parsera}
+Bison generuje parsery oparte na technice LALR(1) (Look-Ahead LR), która jest rozszerzeniem klasycznego podejścia LR(1). LALR(1) łączy w sobie zalety analizy LR (Left-to-right, Rightmost derivation) z jednoczesnym wykorzystaniem jednego symbolu lookahead, co pozwala na bardzo efektywne przetwarzanie szerokiego zakresu gramatyk. Dodatkowo, Bison oferuje możliwość generowania parserów GLR (Generalized LR), które są w stanie obsłużyć jeszcze szerszy zakres gramatyk, w tym te z~niejednoznacznościami.\cite{biosonOrg}
+
+W porównaniu do ANTLRv4 i jego podejścia LL(*), Bison i jego technika LALR(1) są bardziej zbliżone do tradycyjnych metod kompilacji, co może być korzystne w przypadku bardziej złożonych języków programowania. Parsery LALR(1) są zazwyczaj bardziej wydajne i wymagają mniej pamięci niż ich odpowiedniki LL(*), szczególnie w przypadku dużych gramatyk. \cite{LLvsLR}
+
+\subsubsection{Proces generowania parsera}
+Proces tworzenia parsera za pomocą Bisona składa się z kilku kroków:
+\begin{enumerate}[label=\arabic*), leftmargin=1.25cm]
+      \item Utworzenia pliku lexera -- Użytkownik definiuje reguły leksykalne w pliku z~rozszerzeniem \kod{.l} (w formacie zgodnym z formatem używanym w Flex), który określa, jak tekst źródłowy jest dzielony na tokeny. Flex generuje kod leksykalny, który jest następnie używany przez Bisona, przy pomocy polecenia \kod{flex lexer.l}.
+    \item Utworzenia pliku gramatyki -- Użytkownik definiuje gramatykę w pliku z rozszerzeniem \kod{.y} (w formacie zgodnym z formatem używanym w Yacc), opisując reguły składniowe i odpowiadające im akcje semantyczne. 
+    \item Generacja kodu parsera -- Uruchomienie Bisona na pliku gramatyki prowadzi do wygenerowania kodu źródłowego parsera w języku C lub C++, można to zrobić poleceniem \kod{bison -d grammar.y}. Wygenerowany kod zawiera zarówno analizator składniowy, jak i struktury danych potrzebne do przechowywania stanu parsera.
+    \item Kompilacja i linkowanie -- Wygenerowany kod parsera jest kompilowany i łączony z resztą aplikacji, tworząc gotowy do użycia parser. Wykonać to można poleceniem \kod{gcc -o parser parser.tab.c lex.yy.c -lfl}, gdzie \kod{parser.tab.c} to plik wygenerowany przez Bison, a \kod{lex.yy.c} to plik wygenerowany przez Flex.
+    \item Integracja z aplikacją -- Parser może być używany w aplikacji poprzez wywoływanie odpowiednich funkcji i przekazywanie do niego kodu źródłowego do analizy.
+\end{enumerate}
+
+\subsubsection{Przygotowanie analizatora leksykalnego}
+Bison nie zajmuje się analizą leksykalną, dlatego konieczne jest użycie narzędzia Flex, które jest analizatorem leksykalnym. Flex jest narzędziem, które generuje kod leksykalny na podstawie zdefiniowanych reguł w pliku z rozszerzeniem \kod{.l}. Reguły te określają, jak tekst źródłowy jest dzielony na tokeny, czyli podstawowe elementy składniowe, takie jak identyfikatory, liczby, operatory czy słowa kluczowe. Flex generuje kod w języku C, który następnie jest kompilowany i łączony z kodem wygenerowanym przez Bison. Współpraca między Flex'em a Bisonem polega na tym, że Flex dostarcza tokeny do parsera Bison, który następnie analizuje te tokeny zgodnie ze zdefiniowaną gramatyką. Poniżej przedstawiono przykład prostego pliku leksykalnego dla Flex'a, który definiuje kilka podstawowych tokenów dla wyrażeń arytmetycznych:
+
+\lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/flexLexer.txt}\protect\relax}, label={Lst:flexLexer.txt}]{codes/flexLexer.txt}
+
+Plik dla narzędzia Flex zawiera trzy główne sekcje oddzielone podwójnymi znakami procent (\%\%). W pierwszej sekcji umieszcza się m.in. dyrektywy \kod{\#include}, w~tym nagłówek wygenerowany przez Bison (\kod{parser.tab.h}), który zawiera definicje tokenów i~struktur wspólnych dla obu narzędzi. Druga, główna sekcja zawiera właściwe reguły leksykalne, a więc wyrażenia regularne opisujące wzorce (np. liczby całkowite, operatory, nawiasy), którym przypisuje się akcje w~języku C, najczęściej zwracające tokeny typu \kod{NUM, PLUS, MINUS} itp. W przykładzie liczby są przekształcane funkcją \kod{atoi()} do wartości całkowitej i przypisywane do zmiennej \kod{yylval}, która jest domyślnym nośnikiem wartości semantycznej tokenu. Tokeny te są następnie zwracane do funkcji \kod{yyparse()} w parserze Bison. Trzecia sekcja, zazwyczaj pomijana w prostych projektach, może zawierać funkcje pomocnicze, w tym wymaganą przez Flex funkcję \kod{yywrap()}, która sygnalizuje koniec danych wejściowych. Aby Flex poprawnie wspópracował z Bisonem musi pozostać zachowana spójność tokenów. Tokeny zwracane przez \kod{yylex()} muszą być zgodne z tymi zdefiniowanymi w pliku \kod{.y} Bisona przy użyciu dyrektywy \kod{\%token}. 
+
+\subsubsection{Przygotowywanie gramatyki}
+Gramatyka składniowa dla parsera generowanego przy pomocy Bisona tworzona jest w specjalnym pliku z rozszerzeniem \kod{.y}. Plik ten opisuje strukturę języka w postaci reguł gramatycznych oraz przypisanych im akcji semantycznych, które realizowane są przez fragmenty kodu w języku C/C++, które są wykonywane w trakcie parsowania. Struktura pliku gramatyki dzieli się na trzy sekcje oddzielone znakiem \kod{\%\%}. W pierwszej umieszcza się deklaracje tokenów (\kod{\%token}), typów wartości (\kod{\%union, \%type}) oraz ewentualne dyrektywy dotyczące działania parsera (np. \kod{\%start, \%left} dla priorytetów operatorów). Druga część zawiera właściwe reguły gramatyczne w formie reguł produkcyjnych symboli nieterminalnych i opcjonalnych bloków kodu wykonawczego. Ostatnia sekcja może zawierać dodatkowe funkcje w języku C, np. funkcję obsługi błędów \kod{yyerror}. Poniżej na listingu \ref{Lst:bisonSimpleGrammar} przedstawiono przykład prostej gramatyki dla wyrażeń arytmetycznych, która definiuje podstawowe operacje matematyczne.
+
+\lstinputlisting[inputencoding=utf8/cp1250, language={bash}, caption={\protect\input{captions/bisonSimpleGrammar.txt}\protect\relax}, label={Lst:bisonSimpleGrammar}]{codes/bisonSimpleGrammar.txt}
+
+W przedstawionym przykładzie plik \kod{parser.y} definiuje prostą gramatykę dla wyrażeń arytmetycznych z liczbami całkowitymi. W sekcji deklaracyjnej użyto \kod{\%union}, aby określić typ wartości przekazywanej między regułami (\kod{ival} dla liczb całkowitych). Następnie zadeklarowano token \kod{NUM} jako przyjmujący wartość typu \kod{ival}, a~także tokeny symboli \kod{PLUS, MINUS, MUL, DIV, LPAREN, RPAREN}, które nie przenoszą danych, ale są niezbędne do określenia składni. Symbol nieterminalny \kod{expr}, reprezentujący dowolne wyrażenie, również został powiązany z typem \kod{ival}. W sekcji reguł zdefiniowano produkcje dla podstawowych operacji arytmetycznych, z przypisanymi akcjami semantycznymi — np. \kod{\$\$ = \$1 + \$3} oblicza wynik dodawania dwóch wyrażeń. Dodatkowo reguła \kod{input} definiuje punkt wejściowy parsera i wypisuje wynik na standardowe wyjście. Dzięki dyrektywom \kod{\%left} ustalono kolejność wykonywania operacji i ich łączność (np. mnożenie ma wyższy priorytet niż dodawanie). Całość parsera współpracuje z analizatorem leksykalnym (Flex), który dostarcza tokeny i wartości liczbowe na podstawie danych wejściowych.
+
+\subsubsection{Analiza drzewa składniowego}
+
+Bison generuje kod parsera, który analizuje wejście i wykonuje akcje semantyczne (zawarte w klamrach {}) przypisane do reguł gramatycznych. Użytkownik może jednak zaimplementować własne mechanizmy budowy drzewa składniowego podczas definiowania akcji semantycznych dla reguł gramatycznych. W praktyce często tworzy się własną strukturę danych reprezentującą drzewo składniowe, a następnie w akcjach semantycznych buduje się to drzewo, dodając odpowiednie węzły i relacje między nimi.
+
+Dla przykładu każda reguła gramatyczna w pliku \kod{.y} może być rozszerzona o kod w języku C lub C++, który tworzy nowe węzły drzewa. Zazwyczaj tworzy się strukturę typu \kod{Node}, zawierającą nazwę lub typ reguły, dzieci (wskaźniki do innych węzłów), i ewentualne dane, takie jak wartość liczby. W ten sposób, poprzez łączenie węzłów w akcjach semantycznych, powstaje pełne drzewo składniowe odwzorowujące strukturę wyrażenia lub programu.
+
+\subsubsection{Obsługa błędów}
+Bison oferuje różne mechanizmy obsługi błędów, w tym możliwość definiowania własnych reguł błędów oraz akcji podejmowanych w przypadku ich wystąpienia. Użytkownik może zdefiniować, jak parser ma reagować na napotkane błędy składniowe, na przykład poprzez pomijanie błędnych fragmentów, próby ich naprawy lub przerywanie analizy.
+Najważniejszą rolę w reagowaniu na błędy odgrywa specjalny symbol \kod{error}, który może być używany w regułach gramatycznych w celu lokalnego przechwytywania błędów. Dzięki temu parser nie musi kończyć analizy po napotkaniu błędu, lecz może kontynuować ją po synchronizacji z określonymi tokenami, takimi jak np. średnik czy nawias klamrowy. Umożliwia to pomijanie błędnych fragmentów oraz ograniczanie propagacji błędów do kolejnych reguł. Użytkownik może dodatkowo zdefiniować funkcję \kod{yyerror}, która jest automatycznie wywoływana przy wystąpieniu błędu i może służyć do logowania, wyświetlania komunikatów czy zbierania informacji diagnostycznych. Istnieje także możliwość kontrolowania działania parsera poprzez makra, takie jak \kod{yyerrok} i \kod{yyclearin}, które resetują stan błędu lub odrzucają bieżący token. W sytuacjach, gdy wymagane jest natychmiastowe zakończenie analizy, parser można skonfigurować tak, aby przerywał pracę przy pierwszym błędzie. 
+
+\subsubsection{Wydajność}
+Wydajność parserów generowanych przez Bison wynika przede wszystkim z zastosowania mechanizmu LALR(1) czyli tablicowego i deterministycznego podejścia do parsowania. Takie rozwiązanie pozwala na osiągnięcie złożoności czasowej O(n) względem liczby tokenów, przy bardzo niewielkim narzucie pamięciowym, ponieważ wiele stanów parsera dzieli wspólny „szkielet” automatu. Idealna kompresja stanów sprawia, że parsery LALR(1) są kompaktowe i szybsze niż parsery typu LL(*) (np. ANTLR), które często potrzebują dużo pamięci ze względu na dynamiczne tablice lookahead lub backtracking. Parser wygenerowany przez ANTLR może być nawet kilkukrotnie wolniejszy niż jego odpowiednik z Bison/Flex przy podobnej gramatyce C-style, a do tego zużywa więcej pamięci na tokeny i strukturę drzewa. 
+
+Dodatkowo Bison obsługuje algorytmy IELR(1), canonical LR(1) i GLR, które można aktywować jeśli gramatyka przekracza możliwości LALR(1), każdy z nich dostępny  jest zwyczajnie przez dyrektywy \kod{\%pure-parser, \%glr-parser} czy flagi konfiguracyjne, bez zmiany semantyki gramatyki. Parsery te, choć mogą być nieco cięższe, nadal działają w czasie liniowym dla większości danych wejściowych, a ich tablice można łatwo zoptymalizować. \cite{antlrVsLexYacc}
+
+\subsubsection{Dokumentacja, licencja i wsparcie społeczności}
+GNU Bison jest projektem rozwijanym od wielu lat w ramach ekosystemu GNU, co wiąże się z jego otwartością i dostępnością, ale również z pewnymi ograniczeniami w zakresie dokumentacji oraz wsparcia. Narzędzie jest dostępne na licencji GNU General Public License v3 (GPL-3.0), co oznacza, że każdy może swobodnie korzystać z Bisona, modyfikować jego kod źródłowy oraz rozpowszechniać zmodyfikowane wersje, pod warunkiem, że również udostępni kod na tej samej licencji. W praktyce, GPL może być niekompatybilna z niektórymi projektami komercyjnymi, które nie chcą ujawniać kodu źródłowego, choć warto zaznaczyć, że kod parsera wygenerowany przez Bison (tzn. pliki \kod{.tab.c, .tab.h}) nie podlega ograniczeniom GPL, lecz jest udostępniany na zasadzie wyjątkowej licencji (GPL + exception), która pozwala na jego użycie w projektach zamkniętych. \cite{biosonOrg}
+
+Dokumentacja Bisona jest formalna i szczegółowa, lecz może być trudna w odbiorze dla początkujących użytkowników. Oficjalny podręcznik opisuje wszystkie mechanizmy narzędzia, jednak skupia się głównie na składni i formalizmach parserów LALR/LR, nie dostarczając wielu praktycznych przykładów ani gotowych rozwiązań. Brakuje też zwięzłego przewodnika w stylu samouczka lub dokumentacji typu „cookbook” znanej z projektów takich jak ANTLR. W efekcie użytkownicy często są zmuszeni do przeszukiwania archiwalnych forów dyskusyjnych, list mailingowych GNU oraz odpowiedzi na Stack Overflow, co może znacząco wydłużać czas nauki i integracji narzędzia. Dodatkowo, wiele starszych źródeł odwołuje się do przestarzałej składni C lub nieobsługiwanych już elementów, co może prowadzić do nieporozumień.
+
+Społeczność wokół Bisona istnieje, ale jest niewielka i skoncentrowana głównie wokół środowisk związanych z systemami GNU/Linux oraz kompilatorami. Projekt ma aktywnego maintainer'a (obecnie Akim Demaille), a repozytorium źródłowe jest rozwijane na Savannah (platformie GNU), co jednak sprawia, że ścieżka zgłaszania błędów lub zmian jest mniej przyjazna niż np. na GitHubie. Brak szerokiego wsparcia IDE i nowoczesnych narzędzi również wpływa na percepcję Bisona jako narzędzia niskopoziomowego i wymagającego dobrej znajomości języka C/C++.
+
+\subsubsection{ Wady i zalety}
+Bison to dojrzałe i wydajne narzędzie do generowania parserów, powszechnie wykorzystywane w projektach systemowych i kompilatorach. Umożliwia tworzenie parserów zgodnych z techniką LALR(1), a także parserów GLR, co pozwala na analizę również niejednoznacznych gramatyk. Narzędzie dobrze integruje się z Flexem, wspiera języki C i C++, a dzięki licencji sczególnej licencji GPL z wyjątkiem można je stosować również w projektach zamkniętych. Bison oferuje wysoką wydajność, zwłaszcza dla dużych i złożonych gramatyk, oraz dużą kontrolę nad procesem parsowania i konstrukcją drzewa składniowego, którą użytkownik może definiować samodzielnie w akcjach semantycznych. Mimo to, narzędzie nie jest pozbawione wad: jest wymagające dla początkujących, posiada trudną dokumentację i ograniczoną społeczność. Nie wspiera automatycznego generowania AST, a integracja z nowoczesnymi środowiskami i narzędziami bywa utrudniona.
+
+Główne zalety Bisona to:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+\item wysoka wydajność parserów (szczególnie LALR(1)) nawet dla dużych gramatyk,
+\item obsługa parserów GLR do gramatyk niejednoznacznych,
+\item możliwość definiowania precyzyjnych akcji semantycznych w języku C/C++.
+\item dobra współpraca z narzędziem Flex (analizator leksykalny),
+\item stabilność i wieloletnie wsparcie w projektach systemowych (np. GCC, PostgreSQL),
+\item szczególna licencja GPL z wyjątkiem umożliwiająca użycie w projektach komercyjnych.
+\end{itemize}
+
+Do wad Bisona można zaliczyć:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+\item wysoki próg wejścia, szczególnie dla osób bez doświadczenia z parserami i językiem C,
+\item dokumentacja jest kompletna, ale formalna i mało przystępna dla początkujących,
+\item brak automatycznej generacji AST, użytkownik musi samodzielnie budować strukturę drzewa składniowego,
+\item ograniczona społeczność i niewielka liczba nowoczesnych zasobów edukacyjnych,
+\item domyślnie parser nie jest z ang. reentrant czyli wielowątkowo bezpieczny, co może utrudnić pracę w środowiskach wielowątkowych,
+\item brak gotowych narzędzi do wizualizacji drzewa składniowego czy debugowania parsera w graficzny sposób.
+\end{itemize}
+
+\subsection{Grammatica}
+
+\subsubsection{Historia i przeznaczenie narzędzia}
+Grammatica to narzędzie do generowania parserów, które powstało jako część projektu GNU. Jego celem było stworzenie elastycznego i łatwego w użyciu narzędzia do analizy składniowej, które mogłoby być używane zarówno w projektach komercyjnych, jak i akademickich. Grammatica jest rozwijana jako projekt open-source, co oznacza, że jest dostępna dla każdego do pobrania, używania i modyfikowania.
+
+Grammatica jest narzędziem przeznaczonym do generowania parserów dla języków programowania oraz innych złożonych formatów tekstowych. Znajduje zastosowanie w kompilatorach, interpreterach, narzędziach do analizy statycznej kodu, a także w edytorach tekstu i IDE, gdzie służy do analizy i przetwarzania kodu źródłowego.
+
+\subsubsection{Typ gramatyki i parsera}
+Grammatica generuje parsery oparte na technice GLR (Generalized LR), która jest rozszerzeniem tradycyjnej techniki LR(1). GLR pozwala na obsługę niejednoznacznych gramatyk oraz gramatyk z rekurencją lewą, co czyni go bardzo elastycznym narzędziem do analizy składniowej.
+
+Technika GLR polega na jednoczesnym śledzeniu wielu możliwych ścieżek analizy w przypadku napotkania niejednoznaczności, co pozwala na skuteczne przetwarzanie złożonych gramatyk. Grammatica automatycznie generuje kod potrzebny do obsługi tych wszystkich ścieżek, co może prowadzić do zwiększenia rozmiaru generowanego kodu, ale także do zwiększenia jego elastyczności.
+
+\subsubsection{Proces generowania parsera}
+Proces tworzenia parsera za pomocą Grammatica składa się z kilku kroków:
+\begin{enumerate}[label=\arabic*), leftmargin=1.25cm]
+    \item Tworzenie pliku gramatyki -- Użytkownik definiuje gramatykę w pliku z rozszerzeniem .g, opisując reguły składniowe i odpowiadające im akcje semantyczne.
+    \item Generacja kodu parsera -- Uruchomienie Grammatica na pliku gramatyki prowadzi do wygenerowania kodu źródłowego parsera w języku Java.
+    \item Kompilacja i linkowanie -- Wygenerowany kod parsera jest kompilowany i łączony z resztą aplikacji, tworząc gotowy do użycia parser.
+    \item Integracja z aplikacją -- Parser może być używany w aplikacji poprzez wywoływanie odpowiednich funkcji i przekazywanie do niego kodu źródłowego do analizy.
+\end{enumerate}
+
+Grammatica generuje także kod nagłówkowy, który może być użyty do integracji parsera z innymi narzędziami, takimi jak ANTLR.
+
+\subsubsection{Tworzenie gramatyki}
+Gramatyka w Grammatica jest definiowana w plikach z rozszerzeniem .g i składa się z dwóch głównych sekcji:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+   \item Sekcja definicji -- zawiera nagłówki, deklaracje typów danych oraz inne informacje konfiguracyjne.
+   \item Sekcja reguł -- definiuje reguły składniowe języka, opisując jak poszczególne elementy (np. wyrażenia, instrukcje) są zbudowane z tokenów. Reguły mogą zawierać akcje semantyczne, które są wykonywane podczas parsowania.
+\end{itemize}
+
+Poniżej przedstawiono przykład prostej gramatyki w Grammatica dla wyrażeń arytmetycznych:
+\begin{verbatim}
+%token NUM
+%left '+' '-'
+%left '*' '/'
+
+%%
+expr:   expr '+' expr   { $$ = $1 + $3; }
+    |   expr '-' expr   { $$ = $1 - $3; }
+    |   expr '*' expr   { $$ = $1 * $3; }
+    |   expr '/' expr   { $$ = $1 / $3; }
+    |   '(' expr ')'    { $$ = $2; }
+    |   NUM              { $$ = $1; }
+    ;
+%%
+\end{verbatim}
+
+W powyższym przykładzie zdefiniowano proste wyrażenia arytmetyczne z użyciem operatorów +, -, *, /. Zastosowano także priorytety operatorów oraz nawiasy.
+
+\subsubsection{Analiza drzewa składniowego}
+Grammatica generuje drzewo składniowe w postaci struktury danych zwanej "drzewem parse tree". Drzewo to reprezentuje hierarchię reguł gramatycznych zastosowanych podczas analizy danego ciągu symboli. Każdy węzeł drzewa odpowiada jednej regule gramatycznej, a jego dzieciom przypisane są symbole (terminalne lub nieterminalne) występujące w tej regule.
+
+W przeciwieństwie do ANTLRv4, Grammatica nie generuje automatycznie AST (Abstract Syntax Tree). Użytkownik może jednak łatwo zaimplementować własne mechanizmy budowy AST podczas definiowania akcji semantycznych dla reguł gramatycznych.
+
+\subsubsection{Obsługa błędów}
+Grammatica oferuje różne mechanizmy obsługi błędów, w tym możliwość definiowania własnych reguł błędów oraz akcji podejmowanych w przypadku ich wystąpienia. Użytkownik może zdefiniować, jak parser ma reagować na napotkane błędy składniowe, na przykład poprzez pomijanie błędnych fragmentów, próby ich naprawy lub przerywanie analizy.
+
+\subsubsection{Wydajność i rozszerzalność}
+Parsery generowane przez Grammatica są zazwyczaj bardzo wydajne, szczególnie w przypadku dużych gramatyk. Dzięki zastosowaniu techniki GLR, parsery te potrafią efektywnie analizować złożone języki programowania. Grammatica umożliwia także łatwą integrację z innymi narzędziami, co pozwala na tworzenie wydajnych analizatorów leksykalnych i składniowych.
+
+\subsubsection{Dokumentacja, licencja i wsparcie społeczności}
+Grammatica jest narzędziem o otwartym kodzie źródłowym, dostępnym na licencji GPL. Posiada dobrą dokumentację oraz aktywną społeczność użytkowników, co ułatwia rozwiązywanie problemów i wymianę doświadczeń. Przykłady użycia oraz gotowe gramatyki są dostępne w sieci, co przyspiesza proces nauki i wdrażania narzędzia.
+
+\subsubsection{Wady i zalety}
+Grammatica, podobnie jak każde narzędzie, ma swoje wady i zalety. Do głównych zalet Grammatica należą:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+   \item Wysoka wydajność generowanych parserów, szczególnie dla dużych gramatyk.
+   \item Możliwość generowania parserów GLR.
+   \item Dobra integracja z innymi narzędziami.
+   \item Elastyczność w definiowaniu reguł błędów i akcji semantycznych.
+   \item Aktywna społeczność i dobra dokumentacja.
+\end{itemize}
+
+Do wad Grammatica można zaliczyć:
+\begin{itemize}[label=\textbullet, leftmargin=1.25cm]
+   \item Mniejsza elastyczność w obsłudze niejednoznacznych gramatyk w porównaniu do ANTLRv4.
+   \item Wymagana jest znajomość specyficznej składni plików .g oraz integracji z innymi narzędziami.
+   \item Licencja GPL może być ograniczeniem w przypadku komercyjnego wykorzystania.
+\end{itemize}
+
 \subsection{Porównanie}
+Na podstawie przeprowadzonej analizy narzędzi ANTLRv4, Bison i Grammatica, można zauważyć, że każde z nich ma swoje unikalne cechy, zalety i wady. Wybór odpowiedniego narzędzia do generowania parsera zależy głównie od specyfiki projektu, wymagań dotyczących wydajności, elastyczności oraz osobistych preferencji programisty.
+
+ANTLRv4 wyróżnia się nowoczesnym podejściem do parsowania z użyciem techniki LL(*), co pozwala na łatwe definiowanie gramatyk i szybkie generowanie parserów. Jest to narzędzie o dużej elastyczności, wspierające wiele języków programowania i oferujące zaawansowaną obsługę błędów. Jednak w przypadku bardzo dużych lub skomplikowanych gramatyk, jego wydajność może być niższa niż parserów generowanych przez Bison czy Grammatica.
+
+Bison to narzędzie oparte na sprawdzonej technice LALR(1), które zapewnia wysoką wydajność i niskie zużycie pamięci przy analizie składniowej. Jest to dobre rozwiązanie dla większych gramatyk i bardziej złożonych języków programowania. Bison może być jednak mniej elastyczny w obsłudze niejednoznacznych gramatyk i wymaga znajomości specyficznej składni plików .y.
+
+Grammatica, wykorzystująca technikę GLR, oferuje dużą elastyczność i wydajność, szczególnie w przypadku złożonych i niejednoznacznych gramatyk. Jest to narzędzie łatwe w integracji z innymi systemami, ale może wymagać dodatkowego wysiłku przy definiowaniu AST i obsłudze błędów.
+
+Podsumowując, wybór narzędzia powinien być uzależniony od konkretnych potrzeb projektu oraz preferencji zespołu deweloperskiego. Ważne jest, aby przed podjęciem decyzji dokładnie przeanalizować wymagania dotyczące języka docelowego, wydajności, elastyczności oraz dostępności dokumentacji i wsparcia społeczności.
 \clearpage
 \section{Utworzenie parsera języka ST przy pomocy ANTLRv4}
 \subsection{Przygotowanie środowiska i utworzenie struktury projektu}

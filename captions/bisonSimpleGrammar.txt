@@ -1,0 +1,1 @@
+Przyk³adowa prosta gramatyka dla narzêdzia Bison definiuj¹ca zasady dla wyra¿eñ arytmetycznych
